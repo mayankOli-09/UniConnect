@@ -297,46 +297,6 @@ sudo nginx -c $(pwd)/infra/nginx.conf
 
 ---
 
-## 🗺️ Roadmap
-
-**Phase-I — Proposal & Design** *(current phase)*
-- Problem motivation and current-solution analysis
-- University hierarchy and enrollment-based communication model
-- High-level system architecture and technology stack
-- OS concurrency engine and scheduler requirements
-
-**Phase-II — Development**
-- Foundation: hierarchy, users, courses, enrollment
-- Communication core: auto-generated groups, real-time chat, announcements, notifications
-- Concurrency engine: thread pool, producer-consumer queue, CPU scheduler
-
-**Phase-III — Final Implementation**
-- OS extensions: deadlock detection, starvation/aging, IPC/shared memory
-- OS live dashboard
-- Testing, concurrent load testing, benchmarking, and evaluation
-
-### Expected Outcomes
-- A working, hierarchy-aware university communication platform
-- A concurrent C++20 backend with a thread pool and producer-consumer message queue
-- A live OS dashboard visualizing thread activity, queue depth, and scheduler behavior
-
----
-
-## 👥 Team
-
-**Team ID:** OSDBMS-T109 · **Team Name:** MMSI · **Domain:** Operating Systems + DBMS
-**Mentor:** Dr. Prakash Srivastava
-**Department of Computer Science & Engineering, Graphic Era (Deemed to be University), Dehradun** — Academic Session 2026–27
-
-| Member | Role | Contribution |
-|---|---|---|
-| Mayank Oli | Team Lead | Team coordination and project design |
-| Gara Sameera | Member | Development and documentation |
-| Ishani Singh | Member | DBMS / testing activities |
-| Manan Bisht | Member | Development / documentation |
-
----
-
 ## 📚 References
 
 1. Silberschatz, Galvin, Gagne — *Operating System Concepts* (scheduling, synchronization, deadlock, memory management)
