@@ -1,6 +1,8 @@
 <div align="center">
-🎓 UniConnect — Integrated University Communication & Collaboration Platform
-**One hierarchy. One source of truth. Real-time communication — done right.**
+
+<h1 align="center">🎓 UniConnect — Integrated University Communication & Collaboration Platform</h1>
+
+**One hierarchy. One source of truth. Real-time communication.**
 
 *Hierarchy-Aware Groups • Real-Time Chat • Announcements & Notifications • Concurrency Engine • CPU Scheduling • OS Live Dashboard*
 
@@ -14,6 +16,8 @@
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
 
 </div>
+
+---
 
 ## 🎯 What is UniConnect?
 
@@ -87,10 +91,8 @@ UniConnect/
 │   └── package.json
 │
 ├── infra/                       ← Deployment & infrastructure
-│   ├── nginx.conf               # Reverse proxy / TLS termination config
-│   └── docker-compose.yml       # MySQL, Redis, MinIO, backend, frontend services
-│
-└── docs/                        ← Project proposal, phase reports, diagrams
+    ├── nginx.conf               # Reverse proxy / TLS termination config
+    └── docker-compose.yml       # MySQL, Redis, MinIO, backend, frontend services
 ```
 
 > 📌 The structure above reflects the planned module layout described in the Phase-I proposal; exact file names may evolve during implementation.
@@ -238,17 +240,6 @@ sudo nginx -c $(pwd)/infra/nginx.conf
 
 ---
 
-## 🧩 Integration of Course Concepts
-
-| Course | Concepts Applied | Project Module |
-|---|---|---|
-| **Data Structures in C** | Queues, graphs, hashing, structured data organization | Communication core / scheduler |
-| **OOPs with C++** | Classes, STL, modular backend design, concurrency abstractions | C++20 backend |
-| **Operating Systems** | Processes, CPU scheduling, memory, synchronization, IPC, deadlock | Concurrency engine |
-| **DBMS** | SQL, transactions, normalization, indexing, persistent relational data | MySQL layer |
-
----
-
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
@@ -293,6 +284,31 @@ sudo nginx -c $(pwd)/infra/nginx.conf
 
 ---
 
+## 🗺️ Roadmap
+
+**Phase-I — Proposal & Design** *(current phase)*
+- Problem motivation and current-solution analysis
+- University hierarchy and enrollment-based communication model
+- High-level system architecture and technology stack
+- OS concurrency engine and scheduler requirements
+
+**Phase-II — Development**
+- Foundation: hierarchy, users, courses, enrollment
+- Communication core: auto-generated groups, real-time chat, announcements, notifications
+- Concurrency engine: thread pool, producer-consumer queue, CPU scheduler
+
+**Phase-III — Final Implementation**
+- OS extensions: deadlock detection, starvation/aging, IPC/shared memory
+- OS live dashboard
+- Testing, concurrent load testing, benchmarking, and evaluation
+
+### Expected Outcomes
+- A working, hierarchy-aware university communication platform
+- A concurrent C++20 backend with a thread pool and producer-consumer message queue
+- A live OS dashboard visualizing thread activity, queue depth, and scheduler behavior
+
+---
+
 ## 📚 References
 
 1. Silberschatz, Galvin, Gagne — *Operating System Concepts* (scheduling, synchronization, deadlock, memory management)
@@ -305,15 +321,6 @@ sudo nginx -c $(pwd)/infra/nginx.conf
 8. bcrypt — Provos and Mazières, *"A Future-Adaptable Password Scheme"*
 9. [React](https://react.dev/) and [Tailwind CSS](https://tailwindcss.com/docs) documentation
 10. [Recharts documentation](https://recharts.org/)
-
----
-
-## 📝 Notes
-
-- This README reflects the **Phase-I proposal and design** of UniConnect; module names, file layout, and API details will be finalized during development (Phase-II/III).
-- Communication groups are derived entirely from the hierarchy and enrollment data — there is no manually maintained group list.
-- The concurrency engine (thread pool, scheduler, IPC, deadlock detection) is designed to be independently benchmarked and swapped, so scheduling policies can be compared under load.
-- Assumes a Linux/Ubuntu environment with MySQL, Redis, and MinIO available locally or via containers; enrollment/hierarchy data may be seeded or simulated for development and testing.
 
 ---
 
