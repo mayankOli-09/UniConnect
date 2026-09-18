@@ -1,7 +1,5 @@
-# 🎓 UniConnect — Integrated University Communication & Collaboration Platform
-
 <div align="center">
-
+# 🎓 UniConnect — Integrated University Communication & Collaboration Platform
 **One hierarchy. One source of truth. Real-time communication — done right.**
 
 *Hierarchy-Aware Groups • Real-Time Chat • Announcements & Notifications • Concurrency Engine • CPU Scheduling • OS Live Dashboard*
@@ -14,18 +12,6 @@
 [![Nginx](https://img.shields.io/badge/Nginx-Reverse%20Proxy-009639?logo=nginx&logoColor=white)](https://nginx.org)
 [![Status](https://img.shields.io/badge/Status-Phase--I%20(Design)-yellow)](#-roadmap)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
-
-</div>
-
----
-<div align="center">
-🎓 UniConnect — Integrated University Communication & Collaboration Platform
-
-One hierarchy. One source of truth. Real-time communication — done right.
-
-Hierarchy-Aware Groups • Real-Time Chat • Announcements & Notifications • Concurrency Engine • CPU Scheduling • OS Live Dashboard
-
-C++ React MySQL Redis MinIO Nginx Status License
 
 </div>
 
