@@ -18,6 +18,16 @@
 </div>
 
 ---
+<div align="center">
+🎓 UniConnect — Integrated University Communication & Collaboration Platform
+
+One hierarchy. One source of truth. Real-time communication — done right.
+
+Hierarchy-Aware Groups • Real-Time Chat • Announcements & Notifications • Concurrency Engine • CPU Scheduling • OS Live Dashboard
+
+C++ React MySQL Redis MinIO Nginx Status License
+
+</div>
 
 ## 🎯 What is UniConnect?
 
