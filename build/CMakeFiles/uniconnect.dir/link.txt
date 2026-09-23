@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/uniconnect.dir/link.d CMakeFiles/uniconnect.dir/src/main.cpp.o CMakeFiles/uniconnect.dir/src/server/Server.cpp.o -o uniconnect

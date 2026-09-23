@@ -1,0 +1,3 @@
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/uniconnect.dir
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/edit_cache.dir
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/rebuild_cache.dir
