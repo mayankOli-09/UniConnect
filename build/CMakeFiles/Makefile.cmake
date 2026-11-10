@@ -17,11 +17,18 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-4.3/Modules/CMakeLanguageInformation.cmake"
   "/usr/share/cmake-4.3/Modules/CMakeSystemSpecificInformation.cmake"
   "/usr/share/cmake-4.3/Modules/CMakeSystemSpecificInitialize.cmake"
+  "/usr/share/cmake-4.3/Modules/CheckCXXSourceCompiles.cmake"
+  "/usr/share/cmake-4.3/Modules/CheckIncludeFileCXX.cmake"
+  "/usr/share/cmake-4.3/Modules/CheckLibraryExists.cmake"
   "/usr/share/cmake-4.3/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
   "/usr/share/cmake-4.3/Modules/Compiler/GNU-CXX.cmake"
   "/usr/share/cmake-4.3/Modules/Compiler/GNU.cmake"
+  "/usr/share/cmake-4.3/Modules/FindPackageHandleStandardArgs.cmake"
+  "/usr/share/cmake-4.3/Modules/FindPackageMessage.cmake"
+  "/usr/share/cmake-4.3/Modules/FindThreads.cmake"
   "/usr/share/cmake-4.3/Modules/Internal/CMakeCXXLinkerInformation.cmake"
   "/usr/share/cmake-4.3/Modules/Internal/CMakeCommonLinkerInformation.cmake"
+  "/usr/share/cmake-4.3/Modules/Internal/CheckSourceCompiles.cmake"
   "/usr/share/cmake-4.3/Modules/Linker/GNU-CXX.cmake"
   "/usr/share/cmake-4.3/Modules/Linker/GNU.cmake"
   "/usr/share/cmake-4.3/Modules/Platform/Linker/GNU.cmake"
@@ -48,4 +55,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/uniconnect.dir/DependInfo.cmake"
+  "CMakeFiles/test_queue.dir/DependInfo.cmake"
+  "CMakeFiles/test_scheduler.dir/DependInfo.cmake"
+  "CMakeFiles/test_database.dir/DependInfo.cmake"
+  "CMakeFiles/test_server.dir/DependInfo.cmake"
   )

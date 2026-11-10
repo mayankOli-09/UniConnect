@@ -100,20 +100,452 @@ CMakeFiles/uniconnect.dir/src/server/Server.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/server/Server.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/server/Server.cpp -o CMakeFiles/uniconnect.dir/src/server/Server.cpp.s
 
+CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o: /media/sf_sharedVM/uniConnect/src/server/EpollServer.cpp
+CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o -MF CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o.d -o CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o -c /media/sf_sharedVM/uniConnect/src/server/EpollServer.cpp
+
+CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/server/EpollServer.cpp > CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.i
+
+CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/server/EpollServer.cpp -o CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.s
+
+CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o: /media/sf_sharedVM/uniConnect/src/server/Connection.cpp
+CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o -MF CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o.d -o CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o -c /media/sf_sharedVM/uniConnect/src/server/Connection.cpp
+
+CMakeFiles/uniconnect.dir/src/server/Connection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/server/Connection.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/server/Connection.cpp > CMakeFiles/uniconnect.dir/src/server/Connection.cpp.i
+
+CMakeFiles/uniconnect.dir/src/server/Connection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/server/Connection.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/server/Connection.cpp -o CMakeFiles/uniconnect.dir/src/server/Connection.cpp.s
+
+CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o: /media/sf_sharedVM/uniConnect/src/http/HttpRequest.cpp
+CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o -MF CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o.d -o CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o -c /media/sf_sharedVM/uniConnect/src/http/HttpRequest.cpp
+
+CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/http/HttpRequest.cpp > CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.i
+
+CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/http/HttpRequest.cpp -o CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.s
+
+CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o: /media/sf_sharedVM/uniConnect/src/http/HttpResponse.cpp
+CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o -MF CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o.d -o CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o -c /media/sf_sharedVM/uniConnect/src/http/HttpResponse.cpp
+
+CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/http/HttpResponse.cpp > CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.i
+
+CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/http/HttpResponse.cpp -o CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.s
+
+CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o: /media/sf_sharedVM/uniConnect/src/http/HttpParser.cpp
+CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o -MF CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o.d -o CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o -c /media/sf_sharedVM/uniConnect/src/http/HttpParser.cpp
+
+CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/http/HttpParser.cpp > CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.i
+
+CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/http/HttpParser.cpp -o CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.s
+
+CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o: /media/sf_sharedVM/uniConnect/src/websocket/WebSocket.cpp
+CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o -MF CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o.d -o CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o -c /media/sf_sharedVM/uniConnect/src/websocket/WebSocket.cpp
+
+CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/websocket/WebSocket.cpp > CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.i
+
+CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/websocket/WebSocket.cpp -o CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.s
+
+CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o: /media/sf_sharedVM/uniConnect/src/websocket/WebSocketParser.cpp
+CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o -MF CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o.d -o CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o -c /media/sf_sharedVM/uniConnect/src/websocket/WebSocketParser.cpp
+
+CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/websocket/WebSocketParser.cpp > CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.i
+
+CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/websocket/WebSocketParser.cpp -o CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.s
+
+CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o: /media/sf_sharedVM/uniConnect/src/concurrency/ThreadPool.cpp
+CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o -MF CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o.d -o CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o -c /media/sf_sharedVM/uniConnect/src/concurrency/ThreadPool.cpp
+
+CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/concurrency/ThreadPool.cpp > CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.i
+
+CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/concurrency/ThreadPool.cpp -o CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.s
+
+CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o: /media/sf_sharedVM/uniConnect/src/concurrency/TaskQueue.cpp
+CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o -MF CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o.d -o CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o -c /media/sf_sharedVM/uniConnect/src/concurrency/TaskQueue.cpp
+
+CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/concurrency/TaskQueue.cpp > CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.i
+
+CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/concurrency/TaskQueue.cpp -o CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.s
+
+CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o: /media/sf_sharedVM/uniConnect/src/concurrency/Scheduler.cpp
+CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o -MF CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o.d -o CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o -c /media/sf_sharedVM/uniConnect/src/concurrency/Scheduler.cpp
+
+CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/concurrency/Scheduler.cpp > CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.i
+
+CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/concurrency/Scheduler.cpp -o CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.s
+
+CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o: /media/sf_sharedVM/uniConnect/src/concurrency/DeadlockDetector.cpp
+CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o -MF CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o.d -o CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o -c /media/sf_sharedVM/uniConnect/src/concurrency/DeadlockDetector.cpp
+
+CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/concurrency/DeadlockDetector.cpp > CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.i
+
+CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/concurrency/DeadlockDetector.cpp -o CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.s
+
+CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o: /media/sf_sharedVM/uniConnect/src/concurrency/SharedMemoryIPC.cpp
+CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o -MF CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o.d -o CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o -c /media/sf_sharedVM/uniConnect/src/concurrency/SharedMemoryIPC.cpp
+
+CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/concurrency/SharedMemoryIPC.cpp > CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.i
+
+CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/concurrency/SharedMemoryIPC.cpp -o CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.s
+
+CMakeFiles/uniconnect.dir/src/database/Database.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/database/Database.cpp.o: /media/sf_sharedVM/uniConnect/src/database/Database.cpp
+CMakeFiles/uniconnect.dir/src/database/Database.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/uniconnect.dir/src/database/Database.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/database/Database.cpp.o -MF CMakeFiles/uniconnect.dir/src/database/Database.cpp.o.d -o CMakeFiles/uniconnect.dir/src/database/Database.cpp.o -c /media/sf_sharedVM/uniConnect/src/database/Database.cpp
+
+CMakeFiles/uniconnect.dir/src/database/Database.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/database/Database.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/database/Database.cpp > CMakeFiles/uniconnect.dir/src/database/Database.cpp.i
+
+CMakeFiles/uniconnect.dir/src/database/Database.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/database/Database.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/database/Database.cpp -o CMakeFiles/uniconnect.dir/src/database/Database.cpp.s
+
+CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o: /media/sf_sharedVM/uniConnect/src/database/UserRepository.cpp
+CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o -MF CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o.d -o CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o -c /media/sf_sharedVM/uniConnect/src/database/UserRepository.cpp
+
+CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/database/UserRepository.cpp > CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.i
+
+CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/database/UserRepository.cpp -o CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.s
+
+CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o: /media/sf_sharedVM/uniConnect/src/database/CourseRepository.cpp
+CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o -MF CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o.d -o CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o -c /media/sf_sharedVM/uniConnect/src/database/CourseRepository.cpp
+
+CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/database/CourseRepository.cpp > CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.i
+
+CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/database/CourseRepository.cpp -o CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.s
+
+CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o: /media/sf_sharedVM/uniConnect/src/database/EnrollmentRepository.cpp
+CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o -MF CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o.d -o CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o -c /media/sf_sharedVM/uniConnect/src/database/EnrollmentRepository.cpp
+
+CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/database/EnrollmentRepository.cpp > CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.i
+
+CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/database/EnrollmentRepository.cpp -o CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.s
+
+CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o: /media/sf_sharedVM/uniConnect/src/database/MessageRepository.cpp
+CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o -MF CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o.d -o CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o -c /media/sf_sharedVM/uniConnect/src/database/MessageRepository.cpp
+
+CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/database/MessageRepository.cpp > CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.i
+
+CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/database/MessageRepository.cpp -o CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.s
+
+CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o: /media/sf_sharedVM/uniConnect/src/services/AuthService.cpp
+CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o -MF CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o.d -o CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o -c /media/sf_sharedVM/uniConnect/src/services/AuthService.cpp
+
+CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/services/AuthService.cpp > CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.i
+
+CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/services/AuthService.cpp -o CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.s
+
+CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o: /media/sf_sharedVM/uniConnect/src/services/UserService.cpp
+CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o -MF CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o.d -o CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o -c /media/sf_sharedVM/uniConnect/src/services/UserService.cpp
+
+CMakeFiles/uniconnect.dir/src/services/UserService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/services/UserService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/services/UserService.cpp > CMakeFiles/uniconnect.dir/src/services/UserService.cpp.i
+
+CMakeFiles/uniconnect.dir/src/services/UserService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/services/UserService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/services/UserService.cpp -o CMakeFiles/uniconnect.dir/src/services/UserService.cpp.s
+
+CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o: /media/sf_sharedVM/uniConnect/src/services/CourseService.cpp
+CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o -MF CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o.d -o CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o -c /media/sf_sharedVM/uniConnect/src/services/CourseService.cpp
+
+CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/services/CourseService.cpp > CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.i
+
+CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/services/CourseService.cpp -o CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.s
+
+CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o: /media/sf_sharedVM/uniConnect/src/services/ChatService.cpp
+CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o -MF CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o.d -o CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o -c /media/sf_sharedVM/uniConnect/src/services/ChatService.cpp
+
+CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/services/ChatService.cpp > CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.i
+
+CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/services/ChatService.cpp -o CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.s
+
+CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o: /media/sf_sharedVM/uniConnect/src/services/NotificationService.cpp
+CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o -MF CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o.d -o CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o -c /media/sf_sharedVM/uniConnect/src/services/NotificationService.cpp
+
+CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/services/NotificationService.cpp > CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.i
+
+CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/services/NotificationService.cpp -o CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.s
+
+CMakeFiles/uniconnect.dir/src/models/Models.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/models/Models.cpp.o: /media/sf_sharedVM/uniConnect/src/models/Models.cpp
+CMakeFiles/uniconnect.dir/src/models/Models.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/uniconnect.dir/src/models/Models.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/models/Models.cpp.o -MF CMakeFiles/uniconnect.dir/src/models/Models.cpp.o.d -o CMakeFiles/uniconnect.dir/src/models/Models.cpp.o -c /media/sf_sharedVM/uniConnect/src/models/Models.cpp
+
+CMakeFiles/uniconnect.dir/src/models/Models.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/models/Models.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/models/Models.cpp > CMakeFiles/uniconnect.dir/src/models/Models.cpp.i
+
+CMakeFiles/uniconnect.dir/src/models/Models.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/models/Models.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/models/Models.cpp -o CMakeFiles/uniconnect.dir/src/models/Models.cpp.s
+
+CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o: /media/sf_sharedVM/uniConnect/src/utils/Logger.cpp
+CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o -MF CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o.d -o CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o -c /media/sf_sharedVM/uniConnect/src/utils/Logger.cpp
+
+CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/utils/Logger.cpp > CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.i
+
+CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/utils/Logger.cpp -o CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.s
+
+CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o: /media/sf_sharedVM/uniConnect/src/utils/UUID.cpp
+CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o -MF CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o.d -o CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o -c /media/sf_sharedVM/uniConnect/src/utils/UUID.cpp
+
+CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/utils/UUID.cpp > CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.i
+
+CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/utils/UUID.cpp -o CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.s
+
+CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o: /media/sf_sharedVM/uniConnect/src/utils/Crypto.cpp
+CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o -MF CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o.d -o CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o -c /media/sf_sharedVM/uniConnect/src/utils/Crypto.cpp
+
+CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/utils/Crypto.cpp > CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.i
+
+CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/utils/Crypto.cpp -o CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.s
+
+CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o: CMakeFiles/uniconnect.dir/flags.make
+CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o: /media/sf_sharedVM/uniConnect/src/utils/Json.cpp
+CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o: CMakeFiles/uniconnect.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o -MF CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o.d -o CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o -c /media/sf_sharedVM/uniConnect/src/utils/Json.cpp
+
+CMakeFiles/uniconnect.dir/src/utils/Json.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/uniconnect.dir/src/utils/Json.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /media/sf_sharedVM/uniConnect/src/utils/Json.cpp > CMakeFiles/uniconnect.dir/src/utils/Json.cpp.i
+
+CMakeFiles/uniconnect.dir/src/utils/Json.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/uniconnect.dir/src/utils/Json.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /media/sf_sharedVM/uniConnect/src/utils/Json.cpp -o CMakeFiles/uniconnect.dir/src/utils/Json.cpp.s
+
 # Object files for target uniconnect
 uniconnect_OBJECTS = \
 "CMakeFiles/uniconnect.dir/src/main.cpp.o" \
-"CMakeFiles/uniconnect.dir/src/server/Server.cpp.o"
+"CMakeFiles/uniconnect.dir/src/server/Server.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/database/Database.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/models/Models.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o" \
+"CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o"
 
 # External object files for target uniconnect
 uniconnect_EXTERNAL_OBJECTS =
 
 uniconnect: CMakeFiles/uniconnect.dir/src/main.cpp.o
 uniconnect: CMakeFiles/uniconnect.dir/src/server/Server.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/database/Database.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/models/Models.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o
+uniconnect: CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o
 uniconnect: CMakeFiles/uniconnect.dir/build.make
 uniconnect: CMakeFiles/uniconnect.dir/compiler_depend.ts
 uniconnect: CMakeFiles/uniconnect.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable uniconnect"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Linking CXX executable uniconnect"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/uniconnect.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
