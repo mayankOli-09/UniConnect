@@ -16,9 +16,9 @@ namespace concurrency {
 struct Task {
     std::string id;
     std::string name;
-    int priority{1}; // 1 = low, 5 = medium, 10 = high/critical
-    int estimated_burst_ms{10}; // For SJF (Shortest Job First)
-    int remaining_burst_ms{10};  // For Round Robin time slicing
+    int priority{1};                            // 1 = low, 5 = medium, 10 = high or critical
+    int estimated_burst_ms{10};                 // For SJF (Shortest Job First)
+    int remaining_burst_ms{10};                 // For Round Robin time slicing
     std::chrono::steady_clock::time_point arrival_time;
     std::function<void()> work;
 

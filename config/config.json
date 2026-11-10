@@ -1,0 +1,35 @@
+{
+  "server": {
+    "port": 8080,
+    "backlog": 1024,
+    "max_connections": 10000
+  },
+  "concurrency": {
+    "thread_pool_size": 4,
+    "queue_capacity": 1000,
+    "default_scheduler_policy": "FCFS",
+    "time_quantum_ms": 25,
+    "aging_wait_threshold_ms": 500
+  },
+  "os_extensions": {
+    "shared_memory_name": "/uniconnect_os_telemetry",
+    "deadlock_detection_enabled": true,
+    "deadlock_check_interval_ms": 1000
+  },
+  "database": {
+    "type": "relational_memory",
+    "mysql_host": "localhost",
+    "mysql_port": 3306,
+    "mysql_user": "uniconnect",
+    "mysql_password": "password",
+    "mysql_dbname": "uniconnect_db"
+  },
+  "jwt": {
+    "secret": "uniconnect_jwt_secret_key_2026",
+    "expiry_seconds": 604800
+  },
+  "logging": {
+    "level": "DEBUG",
+    "file_logging": false
+  }
+}

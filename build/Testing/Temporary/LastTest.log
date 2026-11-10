@@ -1,0 +1,110 @@
+Start testing: Sep 24 13:38 EDT
+----------------------------------------------------------
+1/4 Testing: TestQueue
+1/4 Test: TestQueue
+Command: "/media/sf_sharedVM/uniConnect/build/test_queue"
+Directory: /media/sf_sharedVM/uniConnect/build
+"TestQueue" start time: Sep 24 13:38 EDT
+Output:
+----------------------------------------------------------
+========================================
+  UniConnect OS Concurrency Queue Tests  
+========================================
+[TestQueue] Running testBasicQueue...
+ -> PASSED
+[TestQueue] Running testQueueBoundsAndTimeout...
+ -> PASSED
+[TestQueue] Running testConcurrentProducersConsumers...
+ -> PASSED: Successfully processed 1000 tasks concurrently!
+All TaskQueue tests PASSED!
+<end of output>
+Test time =   0.21 sec
+----------------------------------------------------------
+Test Passed.
+"TestQueue" end time: Sep 24 13:38 EDT
+"TestQueue" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/4 Testing: TestScheduler
+2/4 Test: TestScheduler
+Command: "/media/sf_sharedVM/uniConnect/build/test_scheduler"
+Directory: /media/sf_sharedVM/uniConnect/build
+"TestScheduler" start time: Sep 24 13:38 EDT
+Output:
+----------------------------------------------------------
+========================================
+   UniConnect CPU Scheduler Tests       
+========================================
+[TestScheduler] Testing FCFS Scheduling...
+ -> PASSED: Strictly executed in arrival sequence.
+[TestScheduler] Testing Shortest Job First (SJF)...
+ -> PASSED: Shortest burst time executed first.
+[TestScheduler] Testing Priority Scheduling & Starvation Aging...
+ -> PASSED: Aging promotion successfully triggered!
+All Scheduler tests PASSED!
+<end of output>
+Test time =   0.58 sec
+----------------------------------------------------------
+Test Passed.
+"TestScheduler" end time: Sep 24 13:38 EDT
+"TestScheduler" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/4 Testing: TestDatabase
+3/4 Test: TestDatabase
+Command: "/media/sf_sharedVM/uniConnect/build/test_database"
+Directory: /media/sf_sharedVM/uniConnect/build
+"TestDatabase" start time: Sep 24 13:38 EDT
+Output:
+----------------------------------------------------------
+========================================
+      UniConnect Database Tests         
+========================================
+[TestDatabase] Testing Hierarchy and User Repository...
+[2026-09-24 13:38:17.405] [32m[INFO ][0m [[35mDatabase[0m] [T:140694457689344] Database initialized and seeded successfully with Graphic Era data.
+ -> PASSED
+[TestDatabase] Testing Automatic Communication-Group Synchronization...
+[2026-09-24 13:38:17.409] [32m[INFO ][0m [[35mEnrollment[0m] [T:140694457689344] Student user-test-99 enrolled in section sec-os-a -> group sync: grp-sec-os-a
+ -> Auto-enroll group sync verified!
+[2026-09-24 13:38:17.409] [32m[INFO ][0m [[35mEnrollment[0m] [T:140694457689344] Student user-test-99 dropped section sec-os-a -> removed from group: grp-sec-os-a
+ -> Auto-drop group sync verified!
+ -> PASSED
+[TestDatabase] Testing Message Repository...
+ -> PASSED
+All Database tests PASSED!
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"TestDatabase" end time: Sep 24 13:38 EDT
+"TestDatabase" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/4 Testing: TestServer
+4/4 Test: TestServer
+Command: "/media/sf_sharedVM/uniConnect/build/test_server"
+Directory: /media/sf_sharedVM/uniConnect/build
+"TestServer" start time: Sep 24 13:38 EDT
+Output:
+----------------------------------------------------------
+========================================
+      UniConnect Server & WS Tests      
+========================================
+[TestServer] Testing HTTP Request Parser...
+ -> PASSED
+[TestServer] Testing RFC 6455 WebSocket Handshake...
+ -> PASSED: RFC 6455 Sec-WebSocket-Accept matched standard test vector!
+[TestServer] Testing WebSocket Frame Encoding & Decoding...
+ -> PASSED
+[TestServer] Testing JSON Parsing and Serializing...
+ -> PASSED
+All Server & Protocol tests PASSED!
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"TestServer" end time: Sep 24 13:38 EDT
+"TestServer" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 24 13:38 EDT

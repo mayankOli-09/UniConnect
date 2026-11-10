@@ -1103,3 +1103,46 @@ events:
       Running the CXX compiler's linker: "/usr/bin/ld" "-v"
       GNU ld (GNU Binutils for Debian) 2.46.50.20260617
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-4.3/Modules/Internal/CheckSourceCompiles.cmake:104 (try_compile)"
+      - "/usr/share/cmake-4.3/Modules/CheckCXXSourceCompiles.cmake:103 (cmake_check_source_compiles)"
+      - "/usr/share/cmake-4.3/Modules/FindThreads.cmake:162 (check_cxx_source_compiles)"
+      - "/usr/share/cmake-4.3/Modules/FindThreads.cmake:226 (_threads_check_libc)"
+      - "CMakeLists.txt:18 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/media/sf_sharedVM/uniConnect/build/CMakeFiles/CMakeScratch/TryCompile-N4msU9"
+      binary: "/media/sf_sharedVM/uniConnect/build/CMakeFiles/CMakeScratch/TryCompile-N4msU9"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/media/sf_sharedVM/uniConnect/build/CMakeFiles/CMakeScratch/TryCompile-N4msU9'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e1f40/fast
+        gmake: Warning: File 'Makefile' has modification time 1.4 s in the future
+        /usr/bin/gmake  -f CMakeFiles/cmTC_e1f40.dir/build.make CMakeFiles/cmTC_e1f40.dir/build
+        gmake[1]: Entering directory '/media/sf_sharedVM/uniConnect/build/CMakeFiles/CMakeScratch/TryCompile-N4msU9'
+        gmake[1]: Warning: File 'CMakeFiles/cmTC_e1f40.dir/build.make' has modification time 1.4 s in the future
+        Building CXX object CMakeFiles/cmTC_e1f40.dir/src.cxx.o
+        /usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD  -std=c++20 -o CMakeFiles/cmTC_e1f40.dir/src.cxx.o -c /media/sf_sharedVM/uniConnect/build/CMakeFiles/CMakeScratch/TryCompile-N4msU9/src.cxx
+        Linking CXX executable cmTC_e1f40
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e1f40.dir/link.txt --verbose=1
+        /usr/bin/c++ CMakeFiles/cmTC_e1f40.dir/src.cxx.o -o cmTC_e1f40
+        gmake[1]: warning:  Clock skew detected.  Your build may be incomplete.
+        gmake[1]: Leaving directory '/media/sf_sharedVM/uniConnect/build/CMakeFiles/CMakeScratch/TryCompile-N4msU9'
+        gmake: warning:  Clock skew detected.  Your build may be incomplete.
+        
+      exitCode: 0
+...

@@ -64,10 +64,18 @@ CMAKE_BINARY_DIR = /media/sf_sharedVM/uniConnect/build
 
 # The main recursive "all" target.
 all: CMakeFiles/uniconnect.dir/all
+all: CMakeFiles/test_queue.dir/all
+all: CMakeFiles/test_scheduler.dir/all
+all: CMakeFiles/test_database.dir/all
+all: CMakeFiles/test_server.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/uniconnect.dir/codegen
+codegen: CMakeFiles/test_queue.dir/codegen
+codegen: CMakeFiles/test_scheduler.dir/codegen
+codegen: CMakeFiles/test_database.dir/codegen
+codegen: CMakeFiles/test_server.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -76,6 +84,10 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/uniconnect.dir/clean
+clean: CMakeFiles/test_queue.dir/clean
+clean: CMakeFiles/test_scheduler.dir/clean
+clean: CMakeFiles/test_database.dir/clean
+clean: CMakeFiles/test_server.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -85,12 +97,12 @@ clean: CMakeFiles/uniconnect.dir/clean
 CMakeFiles/uniconnect.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=1,2,3 "Built target uniconnect"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62 "Built target uniconnect"
 .PHONY : CMakeFiles/uniconnect.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/uniconnect.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 30
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/uniconnect.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 0
 .PHONY : CMakeFiles/uniconnect.dir/rule
@@ -102,13 +114,141 @@ uniconnect: CMakeFiles/uniconnect.dir/rule
 # codegen rule for target.
 CMakeFiles/uniconnect.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=1,2,3 "Finished codegen for target uniconnect"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62 "Finished codegen for target uniconnect"
 .PHONY : CMakeFiles/uniconnect.dir/codegen
 
 # clean rule for target.
 CMakeFiles/uniconnect.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/clean
 .PHONY : CMakeFiles/uniconnect.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_queue.dir
+
+# All Build rule for target.
+CMakeFiles/test_queue.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=13,14,15,16 "Built target test_queue"
+.PHONY : CMakeFiles/test_queue.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_queue.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_queue.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_queue.dir/rule
+
+# Convenience name for target.
+test_queue: CMakeFiles/test_queue.dir/rule
+.PHONY : test_queue
+
+# codegen rule for target.
+CMakeFiles/test_queue.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=13,14,15,16 "Finished codegen for target test_queue"
+.PHONY : CMakeFiles/test_queue.dir/codegen
+
+# clean rule for target.
+CMakeFiles/test_queue.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/clean
+.PHONY : CMakeFiles/test_queue.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_scheduler.dir
+
+# All Build rule for target.
+CMakeFiles/test_scheduler.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=17,18,19,20,21 "Built target test_scheduler"
+.PHONY : CMakeFiles/test_scheduler.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_scheduler.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_scheduler.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_scheduler.dir/rule
+
+# Convenience name for target.
+test_scheduler: CMakeFiles/test_scheduler.dir/rule
+.PHONY : test_scheduler
+
+# codegen rule for target.
+CMakeFiles/test_scheduler.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=17,18,19,20,21 "Finished codegen for target test_scheduler"
+.PHONY : CMakeFiles/test_scheduler.dir/codegen
+
+# clean rule for target.
+CMakeFiles/test_scheduler.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/clean
+.PHONY : CMakeFiles/test_scheduler.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_database.dir
+
+# All Build rule for target.
+CMakeFiles/test_database.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12 "Built target test_database"
+.PHONY : CMakeFiles/test_database.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_database.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 12
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_database.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_database.dir/rule
+
+# Convenience name for target.
+test_database: CMakeFiles/test_database.dir/rule
+.PHONY : test_database
+
+# codegen rule for target.
+CMakeFiles/test_database.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12 "Finished codegen for target test_database"
+.PHONY : CMakeFiles/test_database.dir/codegen
+
+# clean rule for target.
+CMakeFiles/test_database.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/clean
+.PHONY : CMakeFiles/test_database.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_server.dir
+
+# All Build rule for target.
+CMakeFiles/test_server.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=22,23,24,25,26,27,28,29,30,31,32 "Built target test_server"
+.PHONY : CMakeFiles/test_server.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_server.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 11
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_server.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/sf_sharedVM/uniConnect/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_server.dir/rule
+
+# Convenience name for target.
+test_server: CMakeFiles/test_server.dir/rule
+.PHONY : test_server
+
+# codegen rule for target.
+CMakeFiles/test_server.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/media/sf_sharedVM/uniConnect/build/CMakeFiles --progress-num=22,23,24,25,26,27,28,29,30,31,32 "Finished codegen for target test_server"
+.PHONY : CMakeFiles/test_server.dir/codegen
+
+# clean rule for target.
+CMakeFiles/test_server.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/clean
+.PHONY : CMakeFiles/test_server.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /media/sf_sharedVM/uniConnect/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/usr/bin/ctest $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
@@ -129,6 +139,403 @@ uniconnect/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/build
 .PHONY : uniconnect/fast
 
+#=============================================================================
+# Target rules for targets named test_queue
+
+# Build rule for target.
+test_queue: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_queue
+.PHONY : test_queue
+
+# fast build rule for target.
+test_queue/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/build
+.PHONY : test_queue/fast
+
+#=============================================================================
+# Target rules for targets named test_scheduler
+
+# Build rule for target.
+test_scheduler: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_scheduler
+.PHONY : test_scheduler
+
+# fast build rule for target.
+test_scheduler/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/build
+.PHONY : test_scheduler/fast
+
+#=============================================================================
+# Target rules for targets named test_database
+
+# Build rule for target.
+test_database: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_database
+.PHONY : test_database
+
+# fast build rule for target.
+test_database/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/build
+.PHONY : test_database/fast
+
+#=============================================================================
+# Target rules for targets named test_server
+
+# Build rule for target.
+test_server: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_server
+.PHONY : test_server
+
+# fast build rule for target.
+test_server/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/build
+.PHONY : test_server/fast
+
+src/concurrency/DeadlockDetector.o: src/concurrency/DeadlockDetector.cpp.o
+.PHONY : src/concurrency/DeadlockDetector.o
+
+# target to build an object file
+src/concurrency/DeadlockDetector.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.o
+.PHONY : src/concurrency/DeadlockDetector.cpp.o
+
+src/concurrency/DeadlockDetector.i: src/concurrency/DeadlockDetector.cpp.i
+.PHONY : src/concurrency/DeadlockDetector.i
+
+# target to preprocess a source file
+src/concurrency/DeadlockDetector.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.i
+.PHONY : src/concurrency/DeadlockDetector.cpp.i
+
+src/concurrency/DeadlockDetector.s: src/concurrency/DeadlockDetector.cpp.s
+.PHONY : src/concurrency/DeadlockDetector.s
+
+# target to generate assembly for a file
+src/concurrency/DeadlockDetector.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/DeadlockDetector.cpp.s
+.PHONY : src/concurrency/DeadlockDetector.cpp.s
+
+src/concurrency/Scheduler.o: src/concurrency/Scheduler.cpp.o
+.PHONY : src/concurrency/Scheduler.o
+
+# target to build an object file
+src/concurrency/Scheduler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/concurrency/Scheduler.cpp.o
+.PHONY : src/concurrency/Scheduler.cpp.o
+
+src/concurrency/Scheduler.i: src/concurrency/Scheduler.cpp.i
+.PHONY : src/concurrency/Scheduler.i
+
+# target to preprocess a source file
+src/concurrency/Scheduler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/concurrency/Scheduler.cpp.i
+.PHONY : src/concurrency/Scheduler.cpp.i
+
+src/concurrency/Scheduler.s: src/concurrency/Scheduler.cpp.s
+.PHONY : src/concurrency/Scheduler.s
+
+# target to generate assembly for a file
+src/concurrency/Scheduler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/Scheduler.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/concurrency/Scheduler.cpp.s
+.PHONY : src/concurrency/Scheduler.cpp.s
+
+src/concurrency/SharedMemoryIPC.o: src/concurrency/SharedMemoryIPC.cpp.o
+.PHONY : src/concurrency/SharedMemoryIPC.o
+
+# target to build an object file
+src/concurrency/SharedMemoryIPC.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.o
+.PHONY : src/concurrency/SharedMemoryIPC.cpp.o
+
+src/concurrency/SharedMemoryIPC.i: src/concurrency/SharedMemoryIPC.cpp.i
+.PHONY : src/concurrency/SharedMemoryIPC.i
+
+# target to preprocess a source file
+src/concurrency/SharedMemoryIPC.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.i
+.PHONY : src/concurrency/SharedMemoryIPC.cpp.i
+
+src/concurrency/SharedMemoryIPC.s: src/concurrency/SharedMemoryIPC.cpp.s
+.PHONY : src/concurrency/SharedMemoryIPC.s
+
+# target to generate assembly for a file
+src/concurrency/SharedMemoryIPC.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/SharedMemoryIPC.cpp.s
+.PHONY : src/concurrency/SharedMemoryIPC.cpp.s
+
+src/concurrency/TaskQueue.o: src/concurrency/TaskQueue.cpp.o
+.PHONY : src/concurrency/TaskQueue.o
+
+# target to build an object file
+src/concurrency/TaskQueue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/src/concurrency/TaskQueue.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/concurrency/TaskQueue.cpp.o
+.PHONY : src/concurrency/TaskQueue.cpp.o
+
+src/concurrency/TaskQueue.i: src/concurrency/TaskQueue.cpp.i
+.PHONY : src/concurrency/TaskQueue.i
+
+# target to preprocess a source file
+src/concurrency/TaskQueue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/src/concurrency/TaskQueue.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/concurrency/TaskQueue.cpp.i
+.PHONY : src/concurrency/TaskQueue.cpp.i
+
+src/concurrency/TaskQueue.s: src/concurrency/TaskQueue.cpp.s
+.PHONY : src/concurrency/TaskQueue.s
+
+# target to generate assembly for a file
+src/concurrency/TaskQueue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/TaskQueue.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/src/concurrency/TaskQueue.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/concurrency/TaskQueue.cpp.s
+.PHONY : src/concurrency/TaskQueue.cpp.s
+
+src/concurrency/ThreadPool.o: src/concurrency/ThreadPool.cpp.o
+.PHONY : src/concurrency/ThreadPool.o
+
+# target to build an object file
+src/concurrency/ThreadPool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.o
+.PHONY : src/concurrency/ThreadPool.cpp.o
+
+src/concurrency/ThreadPool.i: src/concurrency/ThreadPool.cpp.i
+.PHONY : src/concurrency/ThreadPool.i
+
+# target to preprocess a source file
+src/concurrency/ThreadPool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.i
+.PHONY : src/concurrency/ThreadPool.cpp.i
+
+src/concurrency/ThreadPool.s: src/concurrency/ThreadPool.cpp.s
+.PHONY : src/concurrency/ThreadPool.s
+
+# target to generate assembly for a file
+src/concurrency/ThreadPool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/concurrency/ThreadPool.cpp.s
+.PHONY : src/concurrency/ThreadPool.cpp.s
+
+src/database/CourseRepository.o: src/database/CourseRepository.cpp.o
+.PHONY : src/database/CourseRepository.o
+
+# target to build an object file
+src/database/CourseRepository.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/CourseRepository.cpp.o
+.PHONY : src/database/CourseRepository.cpp.o
+
+src/database/CourseRepository.i: src/database/CourseRepository.cpp.i
+.PHONY : src/database/CourseRepository.i
+
+# target to preprocess a source file
+src/database/CourseRepository.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/CourseRepository.cpp.i
+.PHONY : src/database/CourseRepository.cpp.i
+
+src/database/CourseRepository.s: src/database/CourseRepository.cpp.s
+.PHONY : src/database/CourseRepository.s
+
+# target to generate assembly for a file
+src/database/CourseRepository.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/CourseRepository.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/CourseRepository.cpp.s
+.PHONY : src/database/CourseRepository.cpp.s
+
+src/database/Database.o: src/database/Database.cpp.o
+.PHONY : src/database/Database.o
+
+# target to build an object file
+src/database/Database.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/Database.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/Database.cpp.o
+.PHONY : src/database/Database.cpp.o
+
+src/database/Database.i: src/database/Database.cpp.i
+.PHONY : src/database/Database.i
+
+# target to preprocess a source file
+src/database/Database.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/Database.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/Database.cpp.i
+.PHONY : src/database/Database.cpp.i
+
+src/database/Database.s: src/database/Database.cpp.s
+.PHONY : src/database/Database.s
+
+# target to generate assembly for a file
+src/database/Database.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/Database.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/Database.cpp.s
+.PHONY : src/database/Database.cpp.s
+
+src/database/EnrollmentRepository.o: src/database/EnrollmentRepository.cpp.o
+.PHONY : src/database/EnrollmentRepository.o
+
+# target to build an object file
+src/database/EnrollmentRepository.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/EnrollmentRepository.cpp.o
+.PHONY : src/database/EnrollmentRepository.cpp.o
+
+src/database/EnrollmentRepository.i: src/database/EnrollmentRepository.cpp.i
+.PHONY : src/database/EnrollmentRepository.i
+
+# target to preprocess a source file
+src/database/EnrollmentRepository.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/EnrollmentRepository.cpp.i
+.PHONY : src/database/EnrollmentRepository.cpp.i
+
+src/database/EnrollmentRepository.s: src/database/EnrollmentRepository.cpp.s
+.PHONY : src/database/EnrollmentRepository.s
+
+# target to generate assembly for a file
+src/database/EnrollmentRepository.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/EnrollmentRepository.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/EnrollmentRepository.cpp.s
+.PHONY : src/database/EnrollmentRepository.cpp.s
+
+src/database/MessageRepository.o: src/database/MessageRepository.cpp.o
+.PHONY : src/database/MessageRepository.o
+
+# target to build an object file
+src/database/MessageRepository.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/MessageRepository.cpp.o
+.PHONY : src/database/MessageRepository.cpp.o
+
+src/database/MessageRepository.i: src/database/MessageRepository.cpp.i
+.PHONY : src/database/MessageRepository.i
+
+# target to preprocess a source file
+src/database/MessageRepository.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/MessageRepository.cpp.i
+.PHONY : src/database/MessageRepository.cpp.i
+
+src/database/MessageRepository.s: src/database/MessageRepository.cpp.s
+.PHONY : src/database/MessageRepository.s
+
+# target to generate assembly for a file
+src/database/MessageRepository.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/MessageRepository.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/MessageRepository.cpp.s
+.PHONY : src/database/MessageRepository.cpp.s
+
+src/database/UserRepository.o: src/database/UserRepository.cpp.o
+.PHONY : src/database/UserRepository.o
+
+# target to build an object file
+src/database/UserRepository.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/UserRepository.cpp.o
+.PHONY : src/database/UserRepository.cpp.o
+
+src/database/UserRepository.i: src/database/UserRepository.cpp.i
+.PHONY : src/database/UserRepository.i
+
+# target to preprocess a source file
+src/database/UserRepository.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/UserRepository.cpp.i
+.PHONY : src/database/UserRepository.cpp.i
+
+src/database/UserRepository.s: src/database/UserRepository.cpp.s
+.PHONY : src/database/UserRepository.s
+
+# target to generate assembly for a file
+src/database/UserRepository.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/database/UserRepository.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/database/UserRepository.cpp.s
+.PHONY : src/database/UserRepository.cpp.s
+
+src/http/HttpParser.o: src/http/HttpParser.cpp.o
+.PHONY : src/http/HttpParser.o
+
+# target to build an object file
+src/http/HttpParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpParser.cpp.o
+.PHONY : src/http/HttpParser.cpp.o
+
+src/http/HttpParser.i: src/http/HttpParser.cpp.i
+.PHONY : src/http/HttpParser.i
+
+# target to preprocess a source file
+src/http/HttpParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpParser.cpp.i
+.PHONY : src/http/HttpParser.cpp.i
+
+src/http/HttpParser.s: src/http/HttpParser.cpp.s
+.PHONY : src/http/HttpParser.s
+
+# target to generate assembly for a file
+src/http/HttpParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpParser.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpParser.cpp.s
+.PHONY : src/http/HttpParser.cpp.s
+
+src/http/HttpRequest.o: src/http/HttpRequest.cpp.o
+.PHONY : src/http/HttpRequest.o
+
+# target to build an object file
+src/http/HttpRequest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpRequest.cpp.o
+.PHONY : src/http/HttpRequest.cpp.o
+
+src/http/HttpRequest.i: src/http/HttpRequest.cpp.i
+.PHONY : src/http/HttpRequest.i
+
+# target to preprocess a source file
+src/http/HttpRequest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpRequest.cpp.i
+.PHONY : src/http/HttpRequest.cpp.i
+
+src/http/HttpRequest.s: src/http/HttpRequest.cpp.s
+.PHONY : src/http/HttpRequest.s
+
+# target to generate assembly for a file
+src/http/HttpRequest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpRequest.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpRequest.cpp.s
+.PHONY : src/http/HttpRequest.cpp.s
+
+src/http/HttpResponse.o: src/http/HttpResponse.cpp.o
+.PHONY : src/http/HttpResponse.o
+
+# target to build an object file
+src/http/HttpResponse.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpResponse.cpp.o
+.PHONY : src/http/HttpResponse.cpp.o
+
+src/http/HttpResponse.i: src/http/HttpResponse.cpp.i
+.PHONY : src/http/HttpResponse.i
+
+# target to preprocess a source file
+src/http/HttpResponse.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpResponse.cpp.i
+.PHONY : src/http/HttpResponse.cpp.i
+
+src/http/HttpResponse.s: src/http/HttpResponse.cpp.s
+.PHONY : src/http/HttpResponse.s
+
+# target to generate assembly for a file
+src/http/HttpResponse.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/http/HttpResponse.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/http/HttpResponse.cpp.s
+.PHONY : src/http/HttpResponse.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -152,6 +559,81 @@ src/main.s: src/main.cpp.s
 src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
+
+src/models/Models.o: src/models/Models.cpp.o
+.PHONY : src/models/Models.o
+
+# target to build an object file
+src/models/Models.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/models/Models.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/models/Models.cpp.o
+.PHONY : src/models/Models.cpp.o
+
+src/models/Models.i: src/models/Models.cpp.i
+.PHONY : src/models/Models.i
+
+# target to preprocess a source file
+src/models/Models.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/models/Models.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/models/Models.cpp.i
+.PHONY : src/models/Models.cpp.i
+
+src/models/Models.s: src/models/Models.cpp.s
+.PHONY : src/models/Models.s
+
+# target to generate assembly for a file
+src/models/Models.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/models/Models.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/models/Models.cpp.s
+.PHONY : src/models/Models.cpp.s
+
+src/server/Connection.o: src/server/Connection.cpp.o
+.PHONY : src/server/Connection.o
+
+# target to build an object file
+src/server/Connection.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/server/Connection.cpp.o
+.PHONY : src/server/Connection.cpp.o
+
+src/server/Connection.i: src/server/Connection.cpp.i
+.PHONY : src/server/Connection.i
+
+# target to preprocess a source file
+src/server/Connection.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/server/Connection.cpp.i
+.PHONY : src/server/Connection.cpp.i
+
+src/server/Connection.s: src/server/Connection.cpp.s
+.PHONY : src/server/Connection.s
+
+# target to generate assembly for a file
+src/server/Connection.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/server/Connection.cpp.s
+.PHONY : src/server/Connection.cpp.s
+
+src/server/EpollServer.o: src/server/EpollServer.cpp.o
+.PHONY : src/server/EpollServer.o
+
+# target to build an object file
+src/server/EpollServer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.o
+.PHONY : src/server/EpollServer.cpp.o
+
+src/server/EpollServer.i: src/server/EpollServer.cpp.i
+.PHONY : src/server/EpollServer.i
+
+# target to preprocess a source file
+src/server/EpollServer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.i
+.PHONY : src/server/EpollServer.cpp.i
+
+src/server/EpollServer.s: src/server/EpollServer.cpp.s
+.PHONY : src/server/EpollServer.s
+
+# target to generate assembly for a file
+src/server/EpollServer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/server/EpollServer.cpp.s
+.PHONY : src/server/EpollServer.cpp.s
 
 src/server/Server.o: src/server/Server.cpp.o
 .PHONY : src/server/Server.o
@@ -177,6 +659,402 @@ src/server/Server.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/server/Server.cpp.s
 .PHONY : src/server/Server.cpp.s
 
+src/services/AuthService.o: src/services/AuthService.cpp.o
+.PHONY : src/services/AuthService.o
+
+# target to build an object file
+src/services/AuthService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.o
+.PHONY : src/services/AuthService.cpp.o
+
+src/services/AuthService.i: src/services/AuthService.cpp.i
+.PHONY : src/services/AuthService.i
+
+# target to preprocess a source file
+src/services/AuthService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.i
+.PHONY : src/services/AuthService.cpp.i
+
+src/services/AuthService.s: src/services/AuthService.cpp.s
+.PHONY : src/services/AuthService.s
+
+# target to generate assembly for a file
+src/services/AuthService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/AuthService.cpp.s
+.PHONY : src/services/AuthService.cpp.s
+
+src/services/ChatService.o: src/services/ChatService.cpp.o
+.PHONY : src/services/ChatService.o
+
+# target to build an object file
+src/services/ChatService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.o
+.PHONY : src/services/ChatService.cpp.o
+
+src/services/ChatService.i: src/services/ChatService.cpp.i
+.PHONY : src/services/ChatService.i
+
+# target to preprocess a source file
+src/services/ChatService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.i
+.PHONY : src/services/ChatService.cpp.i
+
+src/services/ChatService.s: src/services/ChatService.cpp.s
+.PHONY : src/services/ChatService.s
+
+# target to generate assembly for a file
+src/services/ChatService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/ChatService.cpp.s
+.PHONY : src/services/ChatService.cpp.s
+
+src/services/CourseService.o: src/services/CourseService.cpp.o
+.PHONY : src/services/CourseService.o
+
+# target to build an object file
+src/services/CourseService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.o
+.PHONY : src/services/CourseService.cpp.o
+
+src/services/CourseService.i: src/services/CourseService.cpp.i
+.PHONY : src/services/CourseService.i
+
+# target to preprocess a source file
+src/services/CourseService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.i
+.PHONY : src/services/CourseService.cpp.i
+
+src/services/CourseService.s: src/services/CourseService.cpp.s
+.PHONY : src/services/CourseService.s
+
+# target to generate assembly for a file
+src/services/CourseService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/CourseService.cpp.s
+.PHONY : src/services/CourseService.cpp.s
+
+src/services/NotificationService.o: src/services/NotificationService.cpp.o
+.PHONY : src/services/NotificationService.o
+
+# target to build an object file
+src/services/NotificationService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.o
+.PHONY : src/services/NotificationService.cpp.o
+
+src/services/NotificationService.i: src/services/NotificationService.cpp.i
+.PHONY : src/services/NotificationService.i
+
+# target to preprocess a source file
+src/services/NotificationService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.i
+.PHONY : src/services/NotificationService.cpp.i
+
+src/services/NotificationService.s: src/services/NotificationService.cpp.s
+.PHONY : src/services/NotificationService.s
+
+# target to generate assembly for a file
+src/services/NotificationService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/NotificationService.cpp.s
+.PHONY : src/services/NotificationService.cpp.s
+
+src/services/UserService.o: src/services/UserService.cpp.o
+.PHONY : src/services/UserService.o
+
+# target to build an object file
+src/services/UserService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/UserService.cpp.o
+.PHONY : src/services/UserService.cpp.o
+
+src/services/UserService.i: src/services/UserService.cpp.i
+.PHONY : src/services/UserService.i
+
+# target to preprocess a source file
+src/services/UserService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/UserService.cpp.i
+.PHONY : src/services/UserService.cpp.i
+
+src/services/UserService.s: src/services/UserService.cpp.s
+.PHONY : src/services/UserService.s
+
+# target to generate assembly for a file
+src/services/UserService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/services/UserService.cpp.s
+.PHONY : src/services/UserService.cpp.s
+
+src/utils/Crypto.o: src/utils/Crypto.cpp.o
+.PHONY : src/utils/Crypto.o
+
+# target to build an object file
+src/utils/Crypto.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Crypto.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Crypto.cpp.o
+.PHONY : src/utils/Crypto.cpp.o
+
+src/utils/Crypto.i: src/utils/Crypto.cpp.i
+.PHONY : src/utils/Crypto.i
+
+# target to preprocess a source file
+src/utils/Crypto.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Crypto.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Crypto.cpp.i
+.PHONY : src/utils/Crypto.cpp.i
+
+src/utils/Crypto.s: src/utils/Crypto.cpp.s
+.PHONY : src/utils/Crypto.s
+
+# target to generate assembly for a file
+src/utils/Crypto.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Crypto.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Crypto.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Crypto.cpp.s
+.PHONY : src/utils/Crypto.cpp.s
+
+src/utils/Json.o: src/utils/Json.cpp.o
+.PHONY : src/utils/Json.o
+
+# target to build an object file
+src/utils/Json.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Json.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/src/utils/Json.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/utils/Json.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Json.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Json.cpp.o
+.PHONY : src/utils/Json.cpp.o
+
+src/utils/Json.i: src/utils/Json.cpp.i
+.PHONY : src/utils/Json.i
+
+# target to preprocess a source file
+src/utils/Json.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Json.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/src/utils/Json.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/utils/Json.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Json.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Json.cpp.i
+.PHONY : src/utils/Json.cpp.i
+
+src/utils/Json.s: src/utils/Json.cpp.s
+.PHONY : src/utils/Json.s
+
+# target to generate assembly for a file
+src/utils/Json.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Json.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/src/utils/Json.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/src/utils/Json.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Json.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Json.cpp.s
+.PHONY : src/utils/Json.cpp.s
+
+src/utils/Logger.o: src/utils/Logger.cpp.o
+.PHONY : src/utils/Logger.o
+
+# target to build an object file
+src/utils/Logger.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Logger.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Logger.cpp.o
+.PHONY : src/utils/Logger.cpp.o
+
+src/utils/Logger.i: src/utils/Logger.cpp.i
+.PHONY : src/utils/Logger.i
+
+# target to preprocess a source file
+src/utils/Logger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Logger.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Logger.cpp.i
+.PHONY : src/utils/Logger.cpp.i
+
+src/utils/Logger.s: src/utils/Logger.cpp.s
+.PHONY : src/utils/Logger.s
+
+# target to generate assembly for a file
+src/utils/Logger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/Logger.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/Logger.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/Logger.cpp.s
+.PHONY : src/utils/Logger.cpp.s
+
+src/utils/UUID.o: src/utils/UUID.cpp.o
+.PHONY : src/utils/UUID.o
+
+# target to build an object file
+src/utils/UUID.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/UUID.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/UUID.cpp.o
+.PHONY : src/utils/UUID.cpp.o
+
+src/utils/UUID.i: src/utils/UUID.cpp.i
+.PHONY : src/utils/UUID.i
+
+# target to preprocess a source file
+src/utils/UUID.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/UUID.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/UUID.cpp.i
+.PHONY : src/utils/UUID.cpp.i
+
+src/utils/UUID.s: src/utils/UUID.cpp.s
+.PHONY : src/utils/UUID.s
+
+# target to generate assembly for a file
+src/utils/UUID.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/utils/UUID.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/src/utils/UUID.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/utils/UUID.cpp.s
+.PHONY : src/utils/UUID.cpp.s
+
+src/websocket/WebSocket.o: src/websocket/WebSocket.cpp.o
+.PHONY : src/websocket/WebSocket.o
+
+# target to build an object file
+src/websocket/WebSocket.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/websocket/WebSocket.cpp.o
+.PHONY : src/websocket/WebSocket.cpp.o
+
+src/websocket/WebSocket.i: src/websocket/WebSocket.cpp.i
+.PHONY : src/websocket/WebSocket.i
+
+# target to preprocess a source file
+src/websocket/WebSocket.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/websocket/WebSocket.cpp.i
+.PHONY : src/websocket/WebSocket.cpp.i
+
+src/websocket/WebSocket.s: src/websocket/WebSocket.cpp.s
+.PHONY : src/websocket/WebSocket.s
+
+# target to generate assembly for a file
+src/websocket/WebSocket.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/websocket/WebSocket.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/websocket/WebSocket.cpp.s
+.PHONY : src/websocket/WebSocket.cpp.s
+
+src/websocket/WebSocketParser.o: src/websocket/WebSocketParser.cpp.o
+.PHONY : src/websocket/WebSocketParser.o
+
+# target to build an object file
+src/websocket/WebSocketParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/websocket/WebSocketParser.cpp.o
+.PHONY : src/websocket/WebSocketParser.cpp.o
+
+src/websocket/WebSocketParser.i: src/websocket/WebSocketParser.cpp.i
+.PHONY : src/websocket/WebSocketParser.i
+
+# target to preprocess a source file
+src/websocket/WebSocketParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/websocket/WebSocketParser.cpp.i
+.PHONY : src/websocket/WebSocketParser.cpp.i
+
+src/websocket/WebSocketParser.s: src/websocket/WebSocketParser.cpp.s
+.PHONY : src/websocket/WebSocketParser.s
+
+# target to generate assembly for a file
+src/websocket/WebSocketParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/uniconnect.dir/build.make CMakeFiles/uniconnect.dir/src/websocket/WebSocketParser.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/src/websocket/WebSocketParser.cpp.s
+.PHONY : src/websocket/WebSocketParser.cpp.s
+
+tests/test_database.o: tests/test_database.cpp.o
+.PHONY : tests/test_database.o
+
+# target to build an object file
+tests/test_database.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/tests/test_database.cpp.o
+.PHONY : tests/test_database.cpp.o
+
+tests/test_database.i: tests/test_database.cpp.i
+.PHONY : tests/test_database.i
+
+# target to preprocess a source file
+tests/test_database.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/tests/test_database.cpp.i
+.PHONY : tests/test_database.cpp.i
+
+tests/test_database.s: tests/test_database.cpp.s
+.PHONY : tests/test_database.s
+
+# target to generate assembly for a file
+tests/test_database.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_database.dir/build.make CMakeFiles/test_database.dir/tests/test_database.cpp.s
+.PHONY : tests/test_database.cpp.s
+
+tests/test_queue.o: tests/test_queue.cpp.o
+.PHONY : tests/test_queue.o
+
+# target to build an object file
+tests/test_queue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/tests/test_queue.cpp.o
+.PHONY : tests/test_queue.cpp.o
+
+tests/test_queue.i: tests/test_queue.cpp.i
+.PHONY : tests/test_queue.i
+
+# target to preprocess a source file
+tests/test_queue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/tests/test_queue.cpp.i
+.PHONY : tests/test_queue.cpp.i
+
+tests/test_queue.s: tests/test_queue.cpp.s
+.PHONY : tests/test_queue.s
+
+# target to generate assembly for a file
+tests/test_queue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queue.dir/build.make CMakeFiles/test_queue.dir/tests/test_queue.cpp.s
+.PHONY : tests/test_queue.cpp.s
+
+tests/test_scheduler.o: tests/test_scheduler.cpp.o
+.PHONY : tests/test_scheduler.o
+
+# target to build an object file
+tests/test_scheduler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/tests/test_scheduler.cpp.o
+.PHONY : tests/test_scheduler.cpp.o
+
+tests/test_scheduler.i: tests/test_scheduler.cpp.i
+.PHONY : tests/test_scheduler.i
+
+# target to preprocess a source file
+tests/test_scheduler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/tests/test_scheduler.cpp.i
+.PHONY : tests/test_scheduler.cpp.i
+
+tests/test_scheduler.s: tests/test_scheduler.cpp.s
+.PHONY : tests/test_scheduler.s
+
+# target to generate assembly for a file
+tests/test_scheduler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_scheduler.dir/build.make CMakeFiles/test_scheduler.dir/tests/test_scheduler.cpp.s
+.PHONY : tests/test_scheduler.cpp.s
+
+tests/test_server.o: tests/test_server.cpp.o
+.PHONY : tests/test_server.o
+
+# target to build an object file
+tests/test_server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/tests/test_server.cpp.o
+.PHONY : tests/test_server.cpp.o
+
+tests/test_server.i: tests/test_server.cpp.i
+.PHONY : tests/test_server.i
+
+# target to preprocess a source file
+tests/test_server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/tests/test_server.cpp.i
+.PHONY : tests/test_server.cpp.i
+
+tests/test_server.s: tests/test_server.cpp.s
+.PHONY : tests/test_server.s
+
+# target to generate assembly for a file
+tests/test_server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_server.dir/build.make CMakeFiles/test_server.dir/tests/test_server.cpp.s
+.PHONY : tests/test_server.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -185,13 +1063,111 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test"
+	@echo "... test_database"
+	@echo "... test_queue"
+	@echo "... test_scheduler"
+	@echo "... test_server"
 	@echo "... uniconnect"
+	@echo "... src/concurrency/DeadlockDetector.o"
+	@echo "... src/concurrency/DeadlockDetector.i"
+	@echo "... src/concurrency/DeadlockDetector.s"
+	@echo "... src/concurrency/Scheduler.o"
+	@echo "... src/concurrency/Scheduler.i"
+	@echo "... src/concurrency/Scheduler.s"
+	@echo "... src/concurrency/SharedMemoryIPC.o"
+	@echo "... src/concurrency/SharedMemoryIPC.i"
+	@echo "... src/concurrency/SharedMemoryIPC.s"
+	@echo "... src/concurrency/TaskQueue.o"
+	@echo "... src/concurrency/TaskQueue.i"
+	@echo "... src/concurrency/TaskQueue.s"
+	@echo "... src/concurrency/ThreadPool.o"
+	@echo "... src/concurrency/ThreadPool.i"
+	@echo "... src/concurrency/ThreadPool.s"
+	@echo "... src/database/CourseRepository.o"
+	@echo "... src/database/CourseRepository.i"
+	@echo "... src/database/CourseRepository.s"
+	@echo "... src/database/Database.o"
+	@echo "... src/database/Database.i"
+	@echo "... src/database/Database.s"
+	@echo "... src/database/EnrollmentRepository.o"
+	@echo "... src/database/EnrollmentRepository.i"
+	@echo "... src/database/EnrollmentRepository.s"
+	@echo "... src/database/MessageRepository.o"
+	@echo "... src/database/MessageRepository.i"
+	@echo "... src/database/MessageRepository.s"
+	@echo "... src/database/UserRepository.o"
+	@echo "... src/database/UserRepository.i"
+	@echo "... src/database/UserRepository.s"
+	@echo "... src/http/HttpParser.o"
+	@echo "... src/http/HttpParser.i"
+	@echo "... src/http/HttpParser.s"
+	@echo "... src/http/HttpRequest.o"
+	@echo "... src/http/HttpRequest.i"
+	@echo "... src/http/HttpRequest.s"
+	@echo "... src/http/HttpResponse.o"
+	@echo "... src/http/HttpResponse.i"
+	@echo "... src/http/HttpResponse.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/models/Models.o"
+	@echo "... src/models/Models.i"
+	@echo "... src/models/Models.s"
+	@echo "... src/server/Connection.o"
+	@echo "... src/server/Connection.i"
+	@echo "... src/server/Connection.s"
+	@echo "... src/server/EpollServer.o"
+	@echo "... src/server/EpollServer.i"
+	@echo "... src/server/EpollServer.s"
 	@echo "... src/server/Server.o"
 	@echo "... src/server/Server.i"
 	@echo "... src/server/Server.s"
+	@echo "... src/services/AuthService.o"
+	@echo "... src/services/AuthService.i"
+	@echo "... src/services/AuthService.s"
+	@echo "... src/services/ChatService.o"
+	@echo "... src/services/ChatService.i"
+	@echo "... src/services/ChatService.s"
+	@echo "... src/services/CourseService.o"
+	@echo "... src/services/CourseService.i"
+	@echo "... src/services/CourseService.s"
+	@echo "... src/services/NotificationService.o"
+	@echo "... src/services/NotificationService.i"
+	@echo "... src/services/NotificationService.s"
+	@echo "... src/services/UserService.o"
+	@echo "... src/services/UserService.i"
+	@echo "... src/services/UserService.s"
+	@echo "... src/utils/Crypto.o"
+	@echo "... src/utils/Crypto.i"
+	@echo "... src/utils/Crypto.s"
+	@echo "... src/utils/Json.o"
+	@echo "... src/utils/Json.i"
+	@echo "... src/utils/Json.s"
+	@echo "... src/utils/Logger.o"
+	@echo "... src/utils/Logger.i"
+	@echo "... src/utils/Logger.s"
+	@echo "... src/utils/UUID.o"
+	@echo "... src/utils/UUID.i"
+	@echo "... src/utils/UUID.s"
+	@echo "... src/websocket/WebSocket.o"
+	@echo "... src/websocket/WebSocket.i"
+	@echo "... src/websocket/WebSocket.s"
+	@echo "... src/websocket/WebSocketParser.o"
+	@echo "... src/websocket/WebSocketParser.i"
+	@echo "... src/websocket/WebSocketParser.s"
+	@echo "... tests/test_database.o"
+	@echo "... tests/test_database.i"
+	@echo "... tests/test_database.s"
+	@echo "... tests/test_queue.o"
+	@echo "... tests/test_queue.i"
+	@echo "... tests/test_queue.s"
+	@echo "... tests/test_scheduler.o"
+	@echo "... tests/test_scheduler.i"
+	@echo "... tests/test_scheduler.s"
+	@echo "... tests/test_server.o"
+	@echo "... tests/test_server.i"
+	@echo "... tests/test_server.s"
 .PHONY : help
 
 

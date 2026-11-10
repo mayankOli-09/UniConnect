@@ -1,3 +1,8 @@
 /media/sf_sharedVM/uniConnect/build/CMakeFiles/uniconnect.dir
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/test_queue.dir
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/test_scheduler.dir
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/test_database.dir
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/test_server.dir
+/media/sf_sharedVM/uniConnect/build/CMakeFiles/test.dir
 /media/sf_sharedVM/uniConnect/build/CMakeFiles/edit_cache.dir
 /media/sf_sharedVM/uniConnect/build/CMakeFiles/rebuild_cache.dir
