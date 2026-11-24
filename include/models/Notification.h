@@ -1,42 +1,32 @@
 #pragma once
-
 #include <string>
+
 #include "utils/Json.h"
 
 namespace uniconnect {
 namespace models {
 
+// A row of `notifications`: one person's copy of an announcement.
 struct Notification {
-    std::string id;
-    std::string user_id;
+    int id = 0;
+    int user_id = 0;
+    int announcement_id = 0;     // 0 = not from an announcement
     std::string title;
-    std::string message;
-    bool is_read{false};
-    int priority{1};
-    std::string timestamp;
+    std::string content;
+    std::string kind = "ANNOUNCEMENT";   // ANNOUNCEMENT (posted in a group), NOTICE (sent by an admin) or MENTION
+    bool is_read = false;
+    std::string created_at;      // ISO 8601, UTC
 
     utils::JsonValue toJson() const {
-        auto obj = utils::JsonValue::object();
-        obj["id"] = id;
-        obj["user_id"] = user_id;
-        obj["title"] = title;
-        obj["message"] = message;
-        obj["is_read"] = is_read;
-        obj["priority"] = priority;
-        obj["timestamp"] = timestamp;
-        return obj;
-    }
-
-    static Notification fromJson(const utils::JsonValue& obj) {
-        Notification n;
-        n.id = obj["id"].asString();
-        n.user_id = obj["user_id"].asString();
-        n.title = obj["title"].asString();
-        n.message = obj["message"].asString();
-        n.is_read = obj["is_read"].asBool(false);
-        n.priority = obj["priority"].asInt(1);
-        n.timestamp = obj["timestamp"].asString();
-        return n;
+        auto o = utils::JsonValue::object();
+        o["notification_id"] = id;
+        if (announcement_id > 0) o["announcement_id"] = announcement_id;
+        o["title"] = title;
+        o["content"] = content;
+        o["kind"] = kind;
+        o["is_read"] = is_read;
+        o["created_at"] = created_at;
+        return o;
     }
 };
 

@@ -1,67 +1,64 @@
 #pragma once
-
-#include <string>
-#include <map>
-#include <memory>
-#include <mutex>
+// Windows socket server. The class keeps the name "EpollServer" so the rest of the code base
+// (Server.cpp) does not change, but the event loop is WSAPoll based.
 #include <atomic>
 #include <functional>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <unordered_map>
+
+#include "http/HttpParser.h"
 #include "server/Connection.h"
-#include "http/HttpRequest.h"
-#include "http/HttpResponse.h"
-#include "websocket/WebSocketParser.h"
+#include "websocket/WebSocket.h"
 
 namespace uniconnect {
 namespace server {
 
-using HttpRequestHandler = std::function<void(int client_fd, const http::HttpRequest& request)>;
-using WsFrameHandler = std::function<void(int client_fd, const websocket::WsFrame& frame)>;
-using DisconnectHandler = std::function<void(int client_fd)>;
-
 class EpollServer {
 public:
+    using HttpRequestHandler = std::function<void(int, const http::HttpRequest&)>;
+    using WsFrameHandler = std::function<void(int, const websocket::WsFrame&)>;
+    using DisconnectHandler = std::function<void(int)>;
+
     explicit EpollServer(int port);
     ~EpollServer();
 
-    void setHttpHandler(HttpRequestHandler handler);
-    void setWsFrameHandler(WsFrameHandler handler);
-    void setDisconnectHandler(DisconnectHandler handler);
+    void setHttpHandler(HttpRequestHandler h) { http_handler_ = std::move(h); }
+    void setWsFrameHandler(WsFrameHandler h) { ws_handler_ = std::move(h); }
+    void setDisconnectHandler(DisconnectHandler h) { disconnect_handler_ = std::move(h); }
 
+    // Blocks, running the event loop, until stop() is called. Throws if the port cannot be bound.
     void start();
     void stop();
-    bool isRunning() const;
+    bool isRunning() const { return running_; }
 
-    // Thread-safe send
-    void sendData(int client_fd, const std::string& data);
-    void closeClient(int client_fd);
-
+    // Thread-safe: queue bytes for a client (may be called from worker threads).
+    void sendData(int fd, const std::string& data);
+    // Close a client; anything already queued for it is flushed first.
+    void closeClient(int fd);
     size_t getActiveConnectionsCount() const;
 
 private:
-    int port_;
-    int listen_fd_{-1};
-    int epoll_fd_{-1};
-    int wakeup_fd_{-1};
-    std::atomic<bool> running_{false};
-
-    mutable std::mutex connections_mutex_;
-    std::map<int, std::shared_ptr<Connection>> connections_;
-
-    HttpRequestHandler http_handler_;
-    WsFrameHandler ws_handler_;
-    DisconnectHandler disconnect_handler_;
-
     void setupListeningSocket();
-    void setupEpoll();
     void runEventLoop();
-
     void handleAccept();
     void handleRead(int fd);
     void handleWrite(int fd);
     void removeConnection(int fd);
+    std::shared_ptr<Connection> find(int fd) const;
 
-    bool setNonBlocking(int fd);
-    void triggerWakeup();
+    int port_;
+    int listen_fd_ = -1;
+    std::atomic<bool> running_{false};
+    std::atomic<bool> stop_requested_{false};
+
+    mutable std::mutex connections_mutex_;
+    std::unordered_map<int, std::shared_ptr<Connection>> connections_;
+
+    HttpRequestHandler http_handler_;
+    WsFrameHandler ws_handler_;
+    DisconnectHandler disconnect_handler_;
 };
 
 } // namespace server

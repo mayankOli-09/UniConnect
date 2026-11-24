@@ -1,80 +1,65 @@
 #pragma once
-
-#include <string>
-#include <sstream>
-#include <mutex>
+#if !defined(_WIN32)
+#error "UniConnect is a Windows-only project."
+#endif
+// Thread-safe logger (Windows). Usage: Logger::getInstance().info("Tag", "message", value, ...)
+// Set environment variable UNICONNECT_LOG=debug to also see debug lines.
 #include <chrono>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
+#include <mutex>
+#include <sstream>
+#include <string>
 
 namespace uniconnect {
 namespace utils {
 
-enum class LogLevel {
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR
-};
-
 class Logger {
 public:
-    static Logger& getInstance();
-
-    void setLevel(LogLevel level);
-    LogLevel getLevel() const;
-
-    void log(LogLevel level, const std::string& module, const std::string& message);
-
-    template<typename... Args>
-    void debug(const std::string& module, Args&&... args) {
-        log(LogLevel::DEBUG, module, format(std::forward<Args>(args)...));
+    static Logger& getInstance() {
+        static Logger inst;
+        return inst;
     }
-
-    template<typename... Args>
-    void info(const std::string& module, Args&&... args) {
-        log(LogLevel::INFO, module, format(std::forward<Args>(args)...));
-    }
-
-    template<typename... Args>
-    void warn(const std::string& module, Args&&... args) {
-        log(LogLevel::WARN, module, format(std::forward<Args>(args)...));
-    }
-
-    template<typename... Args>
-    void error(const std::string& module, Args&&... args) {
-        log(LogLevel::ERROR, module, format(std::forward<Args>(args)...));
-    }
+    template <typename... A> void debug(const std::string& tag, const A&... a) { if (debug_) log("DEBUG", tag, a...); }
+    template <typename... A> void info(const std::string& tag, const A&... a)  { log("INFO ", tag, a...); }
+    template <typename... A> void warn(const std::string& tag, const A&... a)  { log("WARN ", tag, a...); }
+    template <typename... A> void error(const std::string& tag, const A&... a) { log("ERROR", tag, a...); }
 
 private:
-    Logger();
-    ~Logger() = default;
-    Logger(const Logger&) = delete;
-    Logger& operator=(const Logger&) = delete;
-
-    template<typename T>
-    void formatHelper(std::ostringstream& oss, T&& val) {
-        oss << std::forward<T>(val);
+    Logger() {
+#if defined(_MSC_VER)
+        char* lvl = nullptr;
+        size_t len = 0;
+        if (_dupenv_s(&lvl, &len, "UNICONNECT_LOG") == 0 && lvl) {
+            debug_ = std::string(lvl) == "debug";
+            std::free(lvl);
+        }
+#else
+        const char* lvl = std::getenv("UNICONNECT_LOG");
+        debug_ = lvl && std::string(lvl) == "debug";
+#endif
     }
-
-    template<typename T, typename... Rest>
-    void formatHelper(std::ostringstream& oss, T&& first, Rest&&... rest) {
-        oss << std::forward<T>(first) << " ";
-        formatHelper(oss, std::forward<Rest>(rest)...);
+    template <typename... A> void log(const char* level, const std::string& tag, const A&... a) {
+        std::ostringstream line;
+        line << '[' << timestamp() << "] [" << level << "] [" << tag << ']';
+        ((line << ' ' << a), ...);
+        line << '\n';
+        std::lock_guard<std::mutex> lock(m_);
+        std::cout << line.str();
+        std::cout.flush();
     }
-
-    template<typename... Args>
-    std::string format(Args&&... args) {
-        std::ostringstream oss;
-        formatHelper(oss, std::forward<Args>(args)...);
-        return oss.str();
+    static std::string timestamp() {
+        std::time_t t = std::time(nullptr);
+        std::tm tm{};
+        localtime_s(&tm, &t);
+        char buf[24];
+        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm);
+        return buf;
     }
-
-    std::string getTimestamp();
-    const char* levelToString(LogLevel level);
-    const char* levelColor(LogLevel level);
-
-    LogLevel current_level_{LogLevel::DEBUG};
-    std::mutex log_mutex_;
+    std::mutex m_;
+    bool debug_ = false;
 };
 
 } // namespace utils

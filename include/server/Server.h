@@ -1,84 +1,78 @@
 #pragma once
-
 #include <memory>
-#include <string>
-#include "server/EpollServer.h"
-#include "concurrency/ThreadPool.h"
-#include "concurrency/Scheduler.h"
-#include "concurrency/TaskQueue.h"
+
 #include "concurrency/DeadlockDetector.h"
+#include "concurrency/Dispatcher.h"
 #include "concurrency/SharedMemoryIPC.h"
-#include "database/Database.h"
+#include "database/AcademicRepository.h"
+#include "database/ChatRepository.h"
+#include "database/NotificationRepository.h"
 #include "database/UserRepository.h"
-#include "database/CourseRepository.h"
-#include "database/EnrollmentRepository.h"
-#include "database/MessageRepository.h"
+#include "http/Router.h"
+#include "routes/WebSocketHandler.h"
+#include "server/EpollServer.h"
+#include "services/AcademicService.h"
 #include "services/AuthService.h"
-#include "services/UserService.h"
-#include "services/CourseService.h"
 #include "services/ChatService.h"
 #include "services/NotificationService.h"
+#include "services/OsService.h"
+#include "websocket/WebSocketManager.h"
 
 namespace uniconnect {
 namespace server {
 
+struct ServerConfig {
+    int port = 8080;
+    size_t worker_threads = 4;                                          // thread-pool size
+    size_t queue_capacity = 1000;                                       // tasks that may wait for a worker
+    concurrency::SchedulingPolicy policy = concurrency::SchedulingPolicy::FCFS;
+    int time_quantum_ms = 25;
+};
+
+// Storage the server works with. A null pointer leaves that feature's routes out.
+struct ServerDeps {
+    database::UserRepository* users = nullptr;          // required
+    database::AcademicRepository* academics = nullptr;  // courses, hierarchy, enrollment
+    database::ChatRepository* chat = nullptr;           // groups and messages
+    database::NotificationRepository* notifications = nullptr;   // announcements and notifications (needs chat)
+};
+
+// The application server: owns the socket server, the router and the services.
 class Server {
 public:
-    explicit Server(int port = 8080,
-                    size_t thread_pool_size = 4,
-                    concurrency::SchedulingPolicy policy = concurrency::SchedulingPolicy::FCFS);
+    Server(ServerConfig config, ServerDeps deps,
+           services::AuthConfig auth_config = services::AuthConfig::fromEnvironment());
     ~Server();
 
-    void start();
+    void start();            // blocks until stop() is called
     void stop();
-
-    // OS Concurrency & Resource Engine accessors
-    std::shared_ptr<concurrency::ThreadPool> getThreadPool() const { return thread_pool_; }
-    std::shared_ptr<concurrency::Scheduler> getScheduler() const { return scheduler_; }
-    std::shared_ptr<concurrency::TaskQueue> getTaskQueue() const { return task_queue_; }
-    std::shared_ptr<concurrency::DeadlockDetector> getDeadlockDetector() const { return deadlock_detector_; }
-
-    // Business Services accessors
-    services::AuthService& getAuthService() { return *auth_service_; }
-    services::CourseService& getCourseService() { return *course_service_; }
-    services::ChatService& getChatService() { return *chat_service_; }
-    services::NotificationService& getNotificationService() { return *notification_service_; }
+    bool isRunning() const;
+    services::AuthService& auth() { return auth_; }
+    services::ChatService* chat() { return chat_.get(); }
+    services::NotificationService* notifications() { return notifications_.get(); }
+    concurrency::Dispatcher& dispatcher() { return *dispatcher_; }
+    services::OsService& os() { return *os_; }
+    size_t websocketSessions() const { return ws_manager_->sessionCount(); }
 
 private:
-    int port_;
-    std::unique_ptr<EpollServer> epoll_server_;
+    void registerRoutes();
+    void onHttpRequest(int fd, const http::HttpRequest& request);
 
-    // OS Concurrency Engine
-    std::shared_ptr<concurrency::Scheduler> scheduler_;
-    std::shared_ptr<concurrency::TaskQueue> task_queue_;
-    std::shared_ptr<concurrency::ThreadPool> thread_pool_;
-    std::shared_ptr<concurrency::DeadlockDetector> deadlock_detector_;
-    std::unique_ptr<concurrency::SharedMemoryIPC> shm_ipc_;
-
-    // Database & Repositories
-    database::Database& db_;
-    std::unique_ptr<database::UserRepository> user_repo_;
-    std::unique_ptr<database::CourseRepository> course_repo_;
-    std::unique_ptr<database::EnrollmentRepository> enroll_repo_;
-    std::unique_ptr<database::MessageRepository> msg_repo_;
-
-    // Services
-    std::unique_ptr<services::AuthService> auth_service_;
-    std::unique_ptr<services::UserService> user_service_;
-    std::unique_ptr<services::CourseService> course_service_;
-    std::unique_ptr<services::ChatService> chat_service_;
-    std::unique_ptr<services::NotificationService> notification_service_;
-
-    void setupRoutes();
-    void handleHttpRequest(int client_fd, const http::HttpRequest& request);
-    void handleWsFrame(int client_fd, const websocket::WsFrame& frame);
-    void handleDisconnect(int client_fd);
-
-    void updateSharedMemoryTelemetry();
+    ServerConfig config_;
+    ServerDeps deps_;
+    services::AuthService auth_;
+    std::unique_ptr<services::AcademicService> academics_;
+    std::unique_ptr<services::ChatService> chat_;
+    std::unique_ptr<services::NotificationService> notifications_;
+    concurrency::DeadlockDetector deadlock_;
+    concurrency::SharedMemoryIPC shared_memory_;
+    std::unique_ptr<services::OsService> os_;
+    http::Router router_;
+    EpollServer socket_server_;
+    std::unique_ptr<websocket::WebSocketManager> ws_manager_;
+    std::unique_ptr<routes::WebSocketHandler> ws_handler_;
+    std::unique_ptr<concurrency::Dispatcher> dispatcher_;   // declared last: stopped first, before the services its tasks use
 };
 
 } // namespace server
 } // namespace uniconnect
-
-// Alias for backwards compatibility with main.cpp
-using Server = uniconnect::server::Server;

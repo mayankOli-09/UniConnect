@@ -1,36 +1,47 @@
 #pragma once
-
+#include <deque>
+#include <functional>
+#include <map>
+#include <mutex>
 #include <string>
 #include <vector>
-#include <memory>
-#include "database/MessageRepository.h"
-#include "database/EnrollmentRepository.h"
-#include "concurrency/ThreadPool.h"
-#include "models/Notification.h"
-#include "utils/Json.h"
+
+#include "concurrency/Dispatcher.h"
+#include "database/ChatRepository.h"
+#include "database/NotificationRepository.h"
+#include "models/User.h"
+#include "services/ServiceResult.h"
 
 namespace uniconnect {
 namespace services {
 
 class NotificationService {
 public:
-    NotificationService(database::MessageRepository& msg_repo,
-                        database::EnrollmentRepository& enroll_repo,
-                        std::shared_ptr<concurrency::ThreadPool> thread_pool);
+    // Called after an announcement is stored, with every notification that was created (used for live push).
+    using NotifyListener = std::function<void(const std::vector<models::Notification>&)>;
 
-    // Broadcast an announcement or urgent alert to all group members
-    bool sendAnnouncement(const std::string& group_id,
-                          const std::string& title,
-                          const std::string& message_text,
-                          int priority = 5);
+    NotificationService(database::NotificationRepository& repo, database::ChatRepository& chat) : repo_(repo), chat_(chat) {}
+    void setDispatcher(concurrency::Dispatcher* d) { dispatcher_ = d; }
+    void setListener(NotifyListener l) { listener_ = std::move(l); }
 
-    std::vector<models::Notification> getUserNotifications(const std::string& user_id, bool unread_only = false);
-    bool markAsRead(const std::string& notif_id);
+    ServiceResult list(const models::User& caller, const std::string& user_id);
+    ServiceResult announce(const models::User& caller, const utils::JsonValue& body);
+    ServiceResult notice(const models::User& caller, const utils::JsonValue& body);     // admin only: {audience, title, content}
+    ServiceResult markRead(const models::User& caller, const utils::JsonValue& body);
+
+    static constexpr int MAX_TITLE_CHARS = 200;
+    static constexpr int MAX_CONTENT_CHARS = 4000;
+    static constexpr int MAX_ANNOUNCEMENTS_PER_MINUTE = 10;
 
 private:
-    database::MessageRepository& msg_repo_;
-    database::EnrollmentRepository& enroll_repo_;
-    std::shared_ptr<concurrency::ThreadPool> thread_pool_;
+    bool allowAnnounce(int user_id);
+
+    database::NotificationRepository& repo_;
+    database::ChatRepository& chat_;
+    concurrency::Dispatcher* dispatcher_ = nullptr;
+    NotifyListener listener_;
+    std::mutex rate_mutex_;
+    std::map<int, std::deque<long long>> posts_;
 };
 
 } // namespace services

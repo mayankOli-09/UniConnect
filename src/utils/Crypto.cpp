@@ -1,373 +1,288 @@
 #include "utils/Crypto.h"
-#include <sstream>
-#include <iomanip>
+
+#include <windows.h>
+#include <bcrypt.h>
+
 #include <cstring>
-#include <algorithm>
+#include <stdexcept>
+
+#if defined(_MSC_VER)
+#pragma comment(lib, "bcrypt.lib")
+#endif
 
 namespace uniconnect {
 namespace utils {
+namespace crypto {
 
-// --- Base64 ---
-static const std::string base64_chars = 
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz"
-    "0123456789+/";
-
-static inline bool is_base64(unsigned char c) {
-    return (isalnum(c) || (c == '+') || (c == '/'));
-}
-
-std::string Crypto::base64Encode(const unsigned char* bytes_to_encode, size_t in_len) {
-    std::string ret;
-    int i = 0;
-    int j = 0;
-    unsigned char char_array_3[3];
-    unsigned char char_array_4[4];
-
-    while (in_len--) {
-        char_array_3[i++] = *(bytes_to_encode++);
-        if (i == 3) {
-            char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-            char_array_4[3] = char_array_3[2] & 0x3f;
-
-            for (i = 0; i < 4; i++) ret += base64_chars[char_array_4[i]];
-            i = 0;
-        }
-    }
-
-    if (i) {
-        for (j = i; j < 3; j++) char_array_3[j] = '\0';
-
-        char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-        char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-        char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-        char_array_4[3] = char_array_3[2] & 0x3f;
-
-        for (j = 0; j < i + 1; j++) ret += base64_chars[char_array_4[j]];
-        while ((i++ < 3)) ret += '=';
-    }
-
-    return ret;
-}
-
-std::string Crypto::base64Encode(const std::string& input) {
-    return base64Encode(reinterpret_cast<const unsigned char*>(input.data()), input.size());
-}
-
-std::string Crypto::base64Decode(const std::string& encoded_string) {
-    size_t in_len = encoded_string.size();
-    int i = 0;
-    int j = 0;
-    int in_ = 0;
-    unsigned char char_array_4[4], char_array_3[3];
-    std::string ret;
-
-    while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
-        char_array_4[i++] = encoded_string[in_]; in_++;
-        if (i == 4) {
-            for (i = 0; i < 4; i++)
-                char_array_4[i] = static_cast<unsigned char>(base64_chars.find(char_array_4[i]));
-
-            char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-            char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-            char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
-
-            for (i = 0; i < 3; i++) ret += char_array_3[i];
-            i = 0;
-        }
-    }
-
-    if (i) {
-        for (j = i; j < 4; j++) char_array_4[j] = 0;
-        for (j = 0; j < 4; j++)
-            char_array_4[j] = static_cast<unsigned char>(base64_chars.find(char_array_4[j]));
-
-        char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-        char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-        char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
-
-        for (j = 0; j < i - 1; j++) ret += char_array_3[j];
-    }
-
-    return ret;
-}
-
-// --- SHA-1 Implementation (RFC 3174) ---
 namespace {
-    inline uint32_t rol(uint32_t value, size_t bits) {
-        return (value << bits) | (value >> (32 - bits));
-    }
 
-    inline uint32_t blk(const uint32_t block[16], size_t i) {
-        return rol(block[(i + 13) & 15] ^ block[(i + 8) & 15] ^ block[(i + 2) & 15] ^ block[i & 15], 1);
-    }
+const uint32_t K[64] = {
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
-    inline void R0(const uint32_t block[16], uint32_t v, uint32_t &w, uint32_t x, uint32_t y, uint32_t &z, size_t i) {
-        z += ((w & (x ^ y)) ^ y) + block[i] + 0x5a827999 + rol(v, 5);
-        w = rol(w, 30);
-    }
-    inline void R1(uint32_t block[16], uint32_t v, uint32_t &w, uint32_t x, uint32_t y, uint32_t &z, size_t i) {
-        block[i & 15] = blk(block, i);
-        z += ((w & (x ^ y)) ^ y) + block[i & 15] + 0x5a827999 + rol(v, 5);
-        w = rol(w, 30);
-    }
-    inline void R2(uint32_t block[16], uint32_t v, uint32_t &w, uint32_t x, uint32_t y, uint32_t &z, size_t i) {
-        block[i & 15] = blk(block, i);
-        z += (w ^ x ^ y) + block[i & 15] + 0x6ed9eba1 + rol(v, 5);
-        w = rol(w, 30);
-    }
-    inline void R3(uint32_t block[16], uint32_t v, uint32_t &w, uint32_t x, uint32_t y, uint32_t &z, size_t i) {
-        block[i & 15] = blk(block, i);
-        z += (((w | x) & y) | (w & x)) + block[i & 15] + 0x8f1bbcdc + rol(v, 5);
-        w = rol(w, 30);
-    }
-    inline void R4(uint32_t block[16], uint32_t v, uint32_t &w, uint32_t x, uint32_t y, uint32_t &z, size_t i) {
-        block[i & 15] = blk(block, i);
-        z += (w ^ x ^ y) + block[i & 15] + 0xca62c1d6 + rol(v, 5);
-        w = rol(w, 30);
-    }
-}
+inline uint32_t rotr(uint32_t x, unsigned n) { return (x >> n) | (x << (32 - n)); }
 
-std::vector<uint8_t> Crypto::sha1(const std::string& input) {
-    uint32_t digest[5] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0};
-
-    uint64_t total_bits = input.size() * 8;
-    std::vector<uint8_t> data(input.begin(), input.end());
-    data.push_back(0x80);
-    while ((data.size() % 64) != 56) {
-        data.push_back(0x00);
+class Sha256 {
+public:
+    Sha256() { reset(); }
+    void reset() {
+        h_[0] = 0x6a09e667; h_[1] = 0xbb67ae85; h_[2] = 0x3c6ef372; h_[3] = 0xa54ff53a;
+        h_[4] = 0x510e527f; h_[5] = 0x9b05688c; h_[6] = 0x1f83d9ab; h_[7] = 0x5be0cd19;
+        total_ = 0; len_ = 0;
     }
-    for (int i = 7; i >= 0; --i) {
-        data.push_back(static_cast<uint8_t>((total_bits >> (i * 8)) & 0xFF));
-    }
-
-    for (size_t chunk = 0; chunk < data.size(); chunk += 64) {
-        uint32_t block[16];
-        for (int i = 0; i < 16; ++i) {
-            block[i] = (static_cast<uint32_t>(data[chunk + i * 4]) << 24) |
-                       (static_cast<uint32_t>(data[chunk + i * 4 + 1]) << 16) |
-                       (static_cast<uint32_t>(data[chunk + i * 4 + 2]) << 8) |
-                       (static_cast<uint32_t>(data[chunk + i * 4 + 3]));
+    void update(const uint8_t* p, size_t n) {
+        total_ += n;
+        while (n > 0) {
+            const size_t take = (64 - len_ < n) ? 64 - len_ : n;
+            std::memcpy(buf_ + len_, p, take);
+            len_ += take; p += take; n -= take;
+            if (len_ == 64) { compress(buf_); len_ = 0; }
         }
-
-        uint32_t a = digest[0];
-        uint32_t b = digest[1];
-        uint32_t c = digest[2];
-        uint32_t d = digest[3];
-        uint32_t e = digest[4];
-
-        R0(block, a, b, c, d, e,  0); R0(block, e, a, b, c, d,  1); R0(block, d, e, a, b, c,  2); R0(block, c, d, e, a, b,  3);
-        R0(block, b, c, d, e, a,  4); R0(block, a, b, c, d, e,  5); R0(block, e, a, b, c, d,  6); R0(block, d, e, a, b, c,  7);
-        R0(block, c, d, e, a, b,  8); R0(block, b, c, d, e, a,  9); R0(block, a, b, c, d, e, 10); R0(block, e, a, b, c, d, 11);
-        R0(block, d, e, a, b, c, 12); R0(block, c, d, e, a, b, 13); R0(block, b, c, d, e, a, 14); R0(block, a, b, c, d, e, 15);
-        R1(block, e, a, b, c, d, 16); R1(block, d, e, a, b, c, 17); R1(block, c, d, e, a, b, 18); R1(block, b, c, d, e, a, 19);
-        R2(block, a, b, c, d, e, 20); R2(block, e, a, b, c, d, 21); R2(block, d, e, a, b, c, 22); R2(block, c, d, e, a, b, 23);
-        R2(block, b, c, d, e, a, 24); R2(block, a, b, c, d, e, 25); R2(block, e, a, b, c, d, 26); R2(block, d, e, a, b, c, 27);
-        R2(block, c, d, e, a, b, 28); R2(block, b, c, d, e, a, 29); R2(block, a, b, c, d, e, 30); R2(block, e, a, b, c, d, 31);
-        R2(block, d, e, a, b, c, 32); R2(block, c, d, e, a, b, 33); R2(block, b, c, d, e, a, 34); R2(block, a, b, c, d, e, 35);
-        R2(block, e, a, b, c, d, 36); R2(block, d, e, a, b, c, 37); R2(block, c, d, e, a, b, 38); R2(block, b, c, d, e, a, 39);
-        R3(block, a, b, c, d, e, 40); R3(block, e, a, b, c, d, 41); R3(block, d, e, a, b, c, 42); R3(block, c, d, e, a, b, 43);
-        R3(block, b, c, d, e, a, 44); R3(block, a, b, c, d, e, 45); R3(block, e, a, b, c, d, 46); R3(block, d, e, a, b, c, 47);
-        R3(block, c, d, e, a, b, 48); R3(block, b, c, d, e, a, 49); R3(block, a, b, c, d, e, 50); R3(block, e, a, b, c, d, 51);
-        R3(block, d, e, a, b, c, 52); R3(block, c, d, e, a, b, 53); R3(block, b, c, d, e, a, 54); R3(block, a, b, c, d, e, 55);
-        R3(block, e, a, b, c, d, 56); R3(block, d, e, a, b, c, 57); R3(block, c, d, e, a, b, 58); R3(block, b, c, d, e, a, 59);
-        R4(block, a, b, c, d, e, 60); R4(block, e, a, b, c, d, 61); R4(block, d, e, a, b, c, 62); R4(block, c, d, e, a, b, 63);
-        R4(block, b, c, d, e, a, 64); R4(block, a, b, c, d, e, 65); R4(block, e, a, b, c, d, 66); R4(block, d, e, a, b, c, 67);
-        R4(block, c, d, e, a, b, 68); R4(block, b, c, d, e, a, 69); R4(block, a, b, c, d, e, 70); R4(block, e, a, b, c, d, 71);
-        R4(block, d, e, a, b, c, 72); R4(block, c, d, e, a, b, 73); R4(block, b, c, d, e, a, 74); R4(block, a, b, c, d, e, 75);
-        R4(block, e, a, b, c, d, 76); R4(block, d, e, a, b, c, 77); R4(block, c, d, e, a, b, 78); R4(block, b, c, d, e, a, 79);
-
-        digest[0] += a; digest[1] += b; digest[2] += c; digest[3] += d; digest[4] += e;
     }
-
-    std::vector<uint8_t> result(20);
-    for (int i = 0; i < 5; ++i) {
-        result[i * 4] = static_cast<uint8_t>((digest[i] >> 24) & 0xFF);
-        result[i * 4 + 1] = static_cast<uint8_t>((digest[i] >> 16) & 0xFF);
-        result[i * 4 + 2] = static_cast<uint8_t>((digest[i] >> 8) & 0xFF);
-        result[i * 4 + 3] = static_cast<uint8_t>(digest[i] & 0xFF);
-    }
-    return result;
-}
-
-std::string Crypto::sha1Hex(const std::string& input) {
-    auto bytes = sha1(input);
-    std::ostringstream oss;
-    for (uint8_t b : bytes) {
-        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b);
-    }
-    return oss.str();
-}
-
-// --- SHA-256 Implementation (FIPS 180-4) ---
-namespace {
-    inline uint32_t ror(uint32_t x, uint32_t n) { return (x >> n) | (x << (32 - n)); }
-    inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) { return (x & y) ^ (~x & z); }
-    inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) { return (x & y) ^ (x & z) ^ (y & z); }
-    inline uint32_t sig0(uint32_t x) { return ror(x, 2) ^ ror(x, 13) ^ ror(x, 22); }
-    inline uint32_t sig1(uint32_t x) { return ror(x, 6) ^ ror(x, 11) ^ ror(x, 25); }
-    inline uint32_t gam0(uint32_t x) { return ror(x, 7) ^ ror(x, 18) ^ (x >> 3); }
-    inline uint32_t gam1(uint32_t x) { return ror(x, 17) ^ ror(x, 19) ^ (x >> 10); }
-
-    static const uint32_t K256[64] = {
-        0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
-        0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
-        0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
-        0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
-        0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
-        0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
-        0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
-        0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
-    };
-}
-
-std::vector<uint8_t> Crypto::sha256(const std::string& input) {
-    uint32_t H[8] = {
-        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-        0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-    };
-
-    uint64_t total_bits = input.size() * 8;
-    std::vector<uint8_t> data(input.begin(), input.end());
-    data.push_back(0x80);
-    while ((data.size() % 64) != 56) {
-        data.push_back(0x00);
-    }
-    for (int i = 7; i >= 0; --i) {
-        data.push_back(static_cast<uint8_t>((total_bits >> (i * 8)) & 0xFF));
-    }
-
-    for (size_t chunk = 0; chunk < data.size(); chunk += 64) {
-        uint32_t W[64];
-        for (int i = 0; i < 16; ++i) {
-            W[i] = (static_cast<uint32_t>(data[chunk + i * 4]) << 24) |
-                   (static_cast<uint32_t>(data[chunk + i * 4 + 1]) << 16) |
-                   (static_cast<uint32_t>(data[chunk + i * 4 + 2]) << 8) |
-                   (static_cast<uint32_t>(data[chunk + i * 4 + 3]));
+    void final(uint8_t out[32]) {
+        const uint64_t bits = total_ * 8;
+        const uint8_t pad = 0x80;
+        update(&pad, 1);
+        const uint8_t zero = 0;
+        while (len_ != 56) update(&zero, 1);
+        uint8_t lenBytes[8];
+        for (int i = 0; i < 8; ++i) lenBytes[i] = static_cast<uint8_t>(bits >> (56 - 8 * i));
+        update(lenBytes, 8);
+        for (int i = 0; i < 8; ++i) {
+            out[i * 4] = static_cast<uint8_t>(h_[i] >> 24);
+            out[i * 4 + 1] = static_cast<uint8_t>(h_[i] >> 16);
+            out[i * 4 + 2] = static_cast<uint8_t>(h_[i] >> 8);
+            out[i * 4 + 3] = static_cast<uint8_t>(h_[i]);
         }
+    }
+
+private:
+    void compress(const uint8_t* b) {
+        uint32_t w[64];
+        for (int i = 0; i < 16; ++i)
+            w[i] = (uint32_t(b[i * 4]) << 24) | (uint32_t(b[i * 4 + 1]) << 16) | (uint32_t(b[i * 4 + 2]) << 8) | b[i * 4 + 3];
         for (int i = 16; i < 64; ++i) {
-            W[i] = gam1(W[i - 2]) + W[i - 7] + gam0(W[i - 15]) + W[i - 16];
+            const uint32_t s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >> 3);
+            const uint32_t s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >> 10);
+            w[i] = w[i - 16] + s0 + w[i - 7] + s1;
         }
-
-        uint32_t a = H[0], b = H[1], c = H[2], d = H[3];
-        uint32_t e = H[4], f = H[5], g = H[6], h = H[7];
-
+        uint32_t a = h_[0], bb = h_[1], c = h_[2], d = h_[3], e = h_[4], f = h_[5], g = h_[6], h = h_[7];
         for (int i = 0; i < 64; ++i) {
-            uint32_t T1 = h + sig1(e) + ch(e, f, g) + K256[i] + W[i];
-            uint32_t T2 = sig0(a) + maj(a, b, c);
-            h = g; g = f; f = e; e = d + T1;
-            d = c; c = b; b = a; a = T1 + T2;
+            const uint32_t S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+            const uint32_t ch = (e & f) ^ (~e & g);
+            const uint32_t t1 = h + S1 + ch + K[i] + w[i];
+            const uint32_t S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+            const uint32_t mj = (a & bb) ^ (a & c) ^ (bb & c);
+            const uint32_t t2 = S0 + mj;
+            h = g; g = f; f = e; e = d + t1; d = c; c = bb; bb = a; a = t1 + t2;
         }
-
-        H[0] += a; H[1] += b; H[2] += c; H[3] += d;
-        H[4] += e; H[5] += f; H[6] += g; H[7] += h;
+        h_[0] += a; h_[1] += bb; h_[2] += c; h_[3] += d; h_[4] += e; h_[5] += f; h_[6] += g; h_[7] += h;
     }
+    uint32_t h_[8];
+    uint8_t buf_[64];
+    uint64_t total_;
+    size_t len_;
+};
 
-    std::vector<uint8_t> result(32);
-    for (int i = 0; i < 8; ++i) {
-        result[i * 4] = static_cast<uint8_t>((H[i] >> 24) & 0xFF);
-        result[i * 4 + 1] = static_cast<uint8_t>((H[i] >> 16) & 0xFF);
-        result[i * 4 + 2] = static_cast<uint8_t>((H[i] >> 8) & 0xFF);
-        result[i * 4 + 3] = static_cast<uint8_t>(H[i] & 0xFF);
+inline const uint8_t* u8(const std::string& s) { return reinterpret_cast<const uint8_t*>(s.data()); }
+
+// HMAC with the two pad blocks pre-absorbed, so each call costs two compressions for short messages.
+class HmacKey {
+public:
+    explicit HmacKey(const std::string& key) {
+        std::string k = key;
+        if (k.size() > 64) k = sha256(k);
+        uint8_t ipad[64], opad[64];
+        std::memset(ipad, 0x36, 64);
+        std::memset(opad, 0x5c, 64);
+        for (size_t i = 0; i < k.size(); ++i) { ipad[i] ^= static_cast<uint8_t>(k[i]); opad[i] ^= static_cast<uint8_t>(k[i]); }
+        inner_.update(ipad, 64);
+        outer_.update(opad, 64);
     }
+    void mac(const uint8_t* data, size_t n, uint8_t out[32]) const {
+        Sha256 in = inner_;
+        in.update(data, n);
+        uint8_t ih[32];
+        in.final(ih);
+        Sha256 o = outer_;
+        o.update(ih, 32);
+        o.final(out);
+    }
+private:
+    Sha256 inner_, outer_;
+};
+
+} // namespace
+
+std::string sha1(const std::string& data) {
+    uint32_t h[5] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
+    std::string msg = data;
+    const uint64_t bits = static_cast<uint64_t>(data.size()) * 8;
+    msg += static_cast<char>(0x80);
+    while (msg.size() % 64 != 56) msg += '\0';
+    for (int i = 7; i >= 0; --i) msg += static_cast<char>((bits >> (8 * i)) & 0xFF);
+    auto rotl = [](uint32_t x, unsigned n) { return (x << n) | (x >> (32 - n)); };
+    for (size_t off = 0; off < msg.size(); off += 64) {
+        uint32_t w[80];
+        for (int i = 0; i < 16; ++i) {
+            const uint8_t* b = u8(msg) + off + static_cast<size_t>(i) * 4;
+            w[i] = (uint32_t(b[0]) << 24) | (uint32_t(b[1]) << 16) | (uint32_t(b[2]) << 8) | b[3];
+        }
+        for (int i = 16; i < 80; ++i) w[i] = rotl(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
+        uint32_t a = h[0], b = h[1], c = h[2], d = h[3], e = h[4];
+        for (int i = 0; i < 80; ++i) {
+            uint32_t f, k;
+            if (i < 20) { f = (b & c) | (~b & d); k = 0x5A827999; }
+            else if (i < 40) { f = b ^ c ^ d; k = 0x6ED9EBA1; }
+            else if (i < 60) { f = (b & c) | (b & d) | (c & d); k = 0x8F1BBCDC; }
+            else { f = b ^ c ^ d; k = 0xCA62C1D6; }
+            const uint32_t t = rotl(a, 5) + f + e + k + w[i];
+            e = d; d = c; c = rotl(b, 30); b = a; a = t;
+        }
+        h[0] += a; h[1] += b; h[2] += c; h[3] += d; h[4] += e;
+    }
+    std::string out;
+    for (uint32_t v : h) for (int i = 3; i >= 0; --i) out += static_cast<char>((v >> (8 * i)) & 0xFF);
+    return out;
+}
+
+std::string sha256(const std::string& data) {
+    Sha256 s;
+    s.update(u8(data), data.size());
+    uint8_t out[32];
+    s.final(out);
+    return std::string(reinterpret_cast<char*>(out), 32);
+}
+
+std::string hmacSha256(const std::string& key, const std::string& data) {
+    HmacKey k(key);
+    uint8_t out[32];
+    k.mac(u8(data), data.size(), out);
+    return std::string(reinterpret_cast<char*>(out), 32);
+}
+
+std::string pbkdf2Sha256(const std::string& password, const std::string& salt, unsigned iterations, size_t dkLen) {
+    const HmacKey key(password);
+    std::string result;
+    for (uint32_t block = 1; result.size() < dkLen; ++block) {
+        std::string first = salt;
+        first += static_cast<char>(block >> 24);
+        first += static_cast<char>(block >> 16);
+        first += static_cast<char>(block >> 8);
+        first += static_cast<char>(block);
+        uint8_t u[32], t[32];
+        key.mac(u8(first), first.size(), u);
+        std::memcpy(t, u, 32);
+        for (unsigned i = 1; i < iterations; ++i) {
+            uint8_t next[32];
+            key.mac(u, 32, next);
+            std::memcpy(u, next, 32);
+            for (int j = 0; j < 32; ++j) t[j] ^= u[j];
+        }
+        result.append(reinterpret_cast<char*>(t), 32);
+    }
+    result.resize(dkLen);
     return result;
 }
 
-std::string Crypto::sha256Hex(const std::string& input) {
-    auto bytes = sha256(input);
-    std::ostringstream oss;
-    for (uint8_t b : bytes) {
-        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b);
+std::string toHex(const std::string& bytes) {
+    static const char* d = "0123456789abcdef";
+    std::string out;
+    out.reserve(bytes.size() * 2);
+    for (unsigned char c : bytes) { out += d[c >> 4]; out += d[c & 15]; }
+    return out;
+}
+
+bool fromHex(const std::string& hex, std::string& out) {
+    if (hex.size() % 2 != 0) return false;
+    auto v = [](char c) -> int {
+        if (c >= '0' && c <= '9') return c - '0';
+        if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+        if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+        return -1;
+    };
+    std::string r;
+    r.reserve(hex.size() / 2);
+    for (size_t i = 0; i < hex.size(); i += 2) {
+        const int hi = v(hex[i]), lo = v(hex[i + 1]);
+        if (hi < 0 || lo < 0) return false;
+        r += static_cast<char>(hi * 16 + lo);
     }
-    return oss.str();
-}
-
-// --- HMAC-SHA256 Implementation (RFC 2104) ---
-std::vector<uint8_t> Crypto::hmacSha256(const std::string& key_str, const std::string& data) {
-    const size_t block_size = 64;
-    std::vector<uint8_t> key(key_str.begin(), key_str.end());
-
-    if (key.size() > block_size) {
-        key = sha256(std::string(key.begin(), key.end()));
-    }
-    if (key.size() < block_size) {
-        key.resize(block_size, 0x00);
-    }
-
-    std::vector<uint8_t> o_key_pad(block_size);
-    std::vector<uint8_t> i_key_pad(block_size);
-    for (size_t i = 0; i < block_size; ++i) {
-        o_key_pad[i] = key[i] ^ 0x5c;
-        i_key_pad[i] = key[i] ^ 0x36;
-    }
-
-    std::string inner_data(i_key_pad.begin(), i_key_pad.end());
-    inner_data.append(data);
-    auto inner_hash = sha256(inner_data);
-
-    std::string outer_data(o_key_pad.begin(), o_key_pad.end());
-    outer_data.append(inner_hash.begin(), inner_hash.end());
-    return sha256(outer_data);
-}
-
-std::string Crypto::hmacSha256Hex(const std::string& key, const std::string& data) {
-    auto bytes = hmacSha256(key, data);
-    std::ostringstream oss;
-    for (uint8_t b : bytes) {
-        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b);
-    }
-    return oss.str();
-}
-
-std::string Crypto::hashPassword(const std::string& password, const std::string& salt) {
-    return sha256Hex(salt + "$" + password + "$" + salt);
-}
-
-bool Crypto::verifyPassword(const std::string& password, const std::string& hash, const std::string& salt) {
-    return hashPassword(password, salt) == hash;
-}
-
-// RFC 6455 Sec-WebSocket-Accept key calculation
-std::string Crypto::generateWebSocketAcceptKey(const std::string& clientKey) {
-    static const std::string ws_guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-    std::string concatenated = clientKey + ws_guid;
-    auto sha1_bytes = sha1(concatenated);
-    return base64Encode(sha1_bytes.data(), sha1_bytes.size());
-}
-
-std::string Crypto::createJWT(const std::string& payloadJson, const std::string& secret) {
-    std::string header = R"({"alg":"HS256","typ":"JWT"})";
-    std::string b64Header = base64Encode(header);
-    std::string b64Payload = base64Encode(payloadJson);
-    std::string dataToSign = b64Header + "." + b64Payload;
-    auto sigBytes = hmacSha256(secret, dataToSign);
-    std::string b64Sig = base64Encode(sigBytes.data(), sigBytes.size());
-    return dataToSign + "." + b64Sig;
-}
-
-bool Crypto::verifyJWT(const std::string& token, const std::string& secret, std::string& outPayload) {
-    auto dot1 = token.find('.');
-    if (dot1 == std::string::npos) return false;
-    auto dot2 = token.find('.', dot1 + 1);
-    if (dot2 == std::string::npos) return false;
-
-    std::string b64Header = token.substr(0, dot1);
-    std::string b64Payload = token.substr(dot1 + 1, dot2 - (dot1 + 1));
-    std::string b64Sig = token.substr(dot2 + 1);
-
-    std::string dataToSign = b64Header + "." + b64Payload;
-    auto expectedSigBytes = hmacSha256(secret, dataToSign);
-    std::string expectedSig = base64Encode(expectedSigBytes.data(), expectedSigBytes.size());
-
-    if (b64Sig != expectedSig) {
-        return false;
-    }
-
-    outPayload = base64Decode(b64Payload);
+    out = std::move(r);
     return true;
 }
 
+std::string base64Encode(const std::string& in) {
+    std::string out = base64UrlEncode(in);
+    for (auto& c : out) { if (c == '-') c = '+'; else if (c == '_') c = '/'; }
+    while (out.size() % 4 != 0) out += '=';
+    return out;
+}
+
+std::string base64UrlEncode(const std::string& in) {
+    static const char* t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    std::string out;
+    size_t i = 0;
+    while (i + 2 < in.size()) {
+        const uint32_t n = (uint32_t(uint8_t(in[i])) << 16) | (uint32_t(uint8_t(in[i + 1])) << 8) | uint8_t(in[i + 2]);
+        out += t[(n >> 18) & 63]; out += t[(n >> 12) & 63]; out += t[(n >> 6) & 63]; out += t[n & 63];
+        i += 3;
+    }
+    if (i + 1 == in.size()) {
+        const uint32_t n = uint32_t(uint8_t(in[i])) << 16;
+        out += t[(n >> 18) & 63]; out += t[(n >> 12) & 63];
+    } else if (i + 2 == in.size()) {
+        const uint32_t n = (uint32_t(uint8_t(in[i])) << 16) | (uint32_t(uint8_t(in[i + 1])) << 8);
+        out += t[(n >> 18) & 63]; out += t[(n >> 12) & 63]; out += t[(n >> 6) & 63];
+    }
+    return out;
+}
+
+bool base64UrlDecode(const std::string& in, std::string& out) {
+    auto v = [](char c) -> int {
+        if (c >= 'A' && c <= 'Z') return c - 'A';
+        if (c >= 'a' && c <= 'z') return c - 'a' + 26;
+        if (c >= '0' && c <= '9') return c - '0' + 52;
+        if (c == '-') return 62;
+        if (c == '_') return 63;
+        return -1;
+    };
+    if (in.size() % 4 == 1) return false;
+    std::string r;
+    uint32_t acc = 0;
+    int bits = 0;
+    for (char c : in) {
+        const int x = v(c);
+        if (x < 0) return false;
+        acc = (acc << 6) | static_cast<uint32_t>(x);
+        bits += 6;
+        if (bits >= 8) { bits -= 8; r += static_cast<char>((acc >> bits) & 0xFF); }
+    }
+    out = std::move(r);
+    return true;
+}
+
+bool constantTimeEquals(const std::string& a, const std::string& b) {
+    if (a.size() != b.size()) return false;
+    unsigned char diff = 0;
+    for (size_t i = 0; i < a.size(); ++i) diff |= static_cast<unsigned char>(a[i] ^ b[i]);
+    return diff == 0;
+}
+
+std::string randomBytes(size_t n) {
+    std::string out(n, '\0');
+    const LONG st = BCryptGenRandom(nullptr, reinterpret_cast<PUCHAR>(&out[0]), static_cast<ULONG>(n),
+                                    BCRYPT_USE_SYSTEM_PREFERRED_RNG);
+    if (st < 0) throw std::runtime_error("BCryptGenRandom failed");
+    return out;
+}
+
+} // namespace crypto
 } // namespace utils
 } // namespace uniconnect

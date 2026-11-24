@@ -1,358 +1,93 @@
+// Windows headers must come first.
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
 #include "server/EpollServer.h"
-#include "http/HttpParser.h"
 #include "utils/Logger.h"
 
-#include <cstring>
-#include <cerrno>
+#include <stdexcept>
+#include <vector>
 
-#if !defined(_WIN32)
-#include <sys/epoll.h>
-#include <sys/socket.h>
-#include <sys/eventfd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <unistd.h>
+#if defined(_MSC_VER)
+#pragma comment(lib, "ws2_32.lib")
 #endif
 
 namespace uniconnect {
 namespace server {
 
-static const int MAX_EPOLL_EVENTS = 64;
+namespace {
+struct WsaInit {
+    WsaInit() {
+        WSADATA d;
+        if (WSAStartup(MAKEWORD(2, 2), &d) != 0) throw std::runtime_error("WSAStartup failed");
+    }
+    ~WsaInit() { WSACleanup(); }
+};
+inline bool wouldBlock() { return WSAGetLastError() == WSAEWOULDBLOCK; }
+inline std::string wsaError() { return "Winsock error " + std::to_string(WSAGetLastError()); }
+inline SOCKET asSock(int fd) { return static_cast<SOCKET>(fd); }
+} // namespace
 
 EpollServer::EpollServer(int port) : port_(port) {}
 
 EpollServer::~EpollServer() {
-    stop();
-}
-
-void EpollServer::setHttpHandler(HttpRequestHandler handler) {
-    http_handler_ = std::move(handler);
-}
-
-void EpollServer::setWsFrameHandler(WsFrameHandler handler) {
-    ws_handler_ = std::move(handler);
-}
-
-void EpollServer::setDisconnectHandler(DisconnectHandler handler) {
-    disconnect_handler_ = std::move(handler);
-}
-
-bool EpollServer::setNonBlocking(int fd) {
-#if !defined(_WIN32)
-    int flags = fcntl(fd, F_GETFL, 0);
-    if (flags == -1) return false;
-    return fcntl(fd, F_SETFL, flags | O_NONBLOCK) != -1;
-#else
-    return true;
-#endif
+    stop_requested_ = true;
+    if (listen_fd_ != -1) { closesocket(asSock(listen_fd_)); listen_fd_ = -1; }
 }
 
 void EpollServer::setupListeningSocket() {
-#if !defined(_WIN32)
-    listen_fd_ = socket(AF_INET, SOCK_STREAM, 0);
-    if (listen_fd_ == -1) {
-        throw std::runtime_error("Failed to create listen socket: " + std::string(strerror(errno)));
+    static WsaInit wsa;  // WSAStartup once per process
+
+    SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (s == INVALID_SOCKET) throw std::runtime_error("Failed to create socket: " + wsaError());
+    listen_fd_ = static_cast<int>(s);
+
+    // On Windows SO_REUSEADDR lets another program steal the port; ask for exclusive use instead.
+    BOOL excl = TRUE;
+    setsockopt(s, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, reinterpret_cast<const char*>(&excl), sizeof(excl));
+
+    u_long nonblock = 1;
+    ioctlsocket(s, FIONBIO, &nonblock);
+
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_port = htons(static_cast<u_short>(port_));
+    if (bind(s, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == SOCKET_ERROR) {
+        const std::string e = wsaError();
+        closesocket(s); listen_fd_ = -1;
+        throw std::runtime_error("Cannot bind port " + std::to_string(port_) + " (" + e + "). Is another program using it?");
     }
-
-    int opt = 1;
-    setsockopt(listen_fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-#ifdef SO_REUSEPORT
-    setsockopt(listen_fd_, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt));
-#endif
-
-    setNonBlocking(listen_fd_);
-
-    sockaddr_in server_addr{};
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(port_);
-
-    if (bind(listen_fd_, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr)) == -1) {
-        throw std::runtime_error("Failed to bind socket to port " + std::to_string(port_) + ": " + strerror(errno));
+    if (listen(s, SOMAXCONN) == SOCKET_ERROR) {
+        const std::string e = wsaError();
+        closesocket(s); listen_fd_ = -1;
+        throw std::runtime_error("listen() failed: " + e);
     }
-
-    if (listen(listen_fd_, 1024) == -1) {
-        throw std::runtime_error("Failed to listen on socket: " + std::string(strerror(errno)));
-    }
-#endif
-    utils::Logger::getInstance().info("EpollServer", "Bound & listening on port", port_);
-}
-
-void EpollServer::setupEpoll() {
-#if !defined(_WIN32)
-    epoll_fd_ = epoll_create1(EPOLL_CLOEXEC);
-    if (epoll_fd_ == -1) {
-        throw std::runtime_error("Failed to create epoll instance: " + std::string(strerror(errno)));
-    }
-
-    wakeup_fd_ = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
-    if (wakeup_fd_ != -1) {
-        epoll_event ev_wakeup{};
-        ev_wakeup.events = EPOLLIN;
-        ev_wakeup.data.fd = wakeup_fd_;
-        epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, wakeup_fd_, &ev_wakeup);
-    }
-
-    epoll_event ev_listen{};
-    ev_listen.events = EPOLLIN | EPOLLET;
-    ev_listen.data.fd = listen_fd_;
-    if (epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, listen_fd_, &ev_listen) == -1) {
-        throw std::runtime_error("Failed to add listen_fd to epoll: " + std::string(strerror(errno)));
-    }
-#endif
-}
-
-void EpollServer::triggerWakeup() {
-#if !defined(_WIN32)
-    if (wakeup_fd_ != -1) {
-        uint64_t val = 1;
-        ssize_t w = write(wakeup_fd_, &val, sizeof(val));
-        (void)w;
-    }
-#endif
 }
 
 void EpollServer::start() {
+    stop_requested_ = false;
     setupListeningSocket();
-    setupEpoll();
     running_ = true;
-    utils::Logger::getInstance().info("EpollServer", "Starting custom epoll asynchronous event loop...");
+    utils::Logger::getInstance().info("Server", "Listening on port", port_);
     runEventLoop();
+
+    // shut down
+    if (listen_fd_ != -1) { closesocket(asSock(listen_fd_)); listen_fd_ = -1; }
+    {
+        std::lock_guard<std::mutex> lock(connections_mutex_);
+        connections_.clear();   // Connection destructors close the sockets
+    }
+    running_ = false;
+    utils::Logger::getInstance().info("Server", "Stopped");
 }
 
-void EpollServer::stop() {
-    if (!running_.exchange(false)) {
-        return;
-    }
-    triggerWakeup();
+void EpollServer::stop() { stop_requested_ = true; }
 
-#if !defined(_WIN32)
-    if (epoll_fd_ != -1) {
-        close(epoll_fd_);
-        epoll_fd_ = -1;
-    }
-    if (wakeup_fd_ != -1) {
-        close(wakeup_fd_);
-        wakeup_fd_ = -1;
-    }
-    if (listen_fd_ != -1) {
-        close(listen_fd_);
-        listen_fd_ = -1;
-    }
-#endif
-
+std::shared_ptr<Connection> EpollServer::find(int fd) const {
     std::lock_guard<std::mutex> lock(connections_mutex_);
-    connections_.clear();
-    utils::Logger::getInstance().info("EpollServer", "Stopped epoll event loop");
-}
-
-bool EpollServer::isRunning() const {
-    return running_;
-}
-
-void EpollServer::handleAccept() {
-#if !defined(_WIN32)
-    while (true) {
-        sockaddr_in client_addr{};
-        socklen_t client_len = sizeof(client_addr);
-        int client_fd = accept(listen_fd_, reinterpret_cast<sockaddr*>(&client_addr), &client_len);
-
-        if (client_fd == -1) {
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                break; // All pending connections accepted
-            }
-            break;
-        }
-
-        setNonBlocking(client_fd);
-
-        epoll_event ev{};
-        ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP;
-        ev.data.fd = client_fd;
-
-        if (epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, client_fd, &ev) == -1) {
-            close(client_fd);
-            continue;
-        }
-
-        auto conn = std::make_shared<Connection>(client_fd);
-        {
-            std::lock_guard<std::mutex> lock(connections_mutex_);
-            connections_[client_fd] = conn;
-        }
-
-        char ip[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &(client_addr.sin_addr), ip, INET_ADDRSTRLEN);
-        utils::Logger::getInstance().debug("EpollServer", "Accepted connection from", ip, "on fd:", client_fd);
-    }
-#endif
-}
-
-void EpollServer::handleRead(int fd) {
-    std::shared_ptr<Connection> conn;
-    {
-        std::lock_guard<std::mutex> lock(connections_mutex_);
-        auto it = connections_.find(fd);
-        if (it == connections_.end()) return;
-        conn = it->second;
-    }
-
-    char buffer[4096];
-    bool client_closed = false;
-
-#if !defined(_WIN32)
-    while (true) {
-        ssize_t bytes = recv(fd, buffer, sizeof(buffer), 0);
-        if (bytes > 0) {
-            conn->appendReadData(buffer, bytes);
-        } else if (bytes == 0) {
-            client_closed = true;
-            break;
-        } else {
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                break; // Read all currently available data
-            }
-            client_closed = true;
-            break;
-        }
-    }
-#endif
-
-    if (client_closed) {
-        removeConnection(fd);
-        return;
-    }
-
-    // Process read buffer according to ConnectionType
-    if (conn->getType() == ConnectionType::HTTP) {
-        std::string& r_buf = conn->getReadBuffer();
-        http::HttpRequest request;
-        size_t consumed = 0;
-        auto res = http::HttpParser::parse(r_buf, request, consumed);
-
-        if (res == http::HttpParseResult::COMPLETE) {
-            conn->consumeReadBuffer(consumed);
-            if (http_handler_) {
-                http_handler_(fd, request);
-            }
-        }
-    } else if (conn->getType() == ConnectionType::WEBSOCKET) {
-        std::string& r_buf = conn->getReadBuffer();
-        while (!r_buf.empty()) {
-            websocket::WsFrame frame;
-            size_t consumed = 0;
-            auto status = websocket::WebSocketParser::parseFrame(
-                reinterpret_cast<const uint8_t*>(r_buf.data()),
-                r_buf.size(),
-                frame,
-                consumed
-            );
-
-            if (status == websocket::WsParseStatus::FRAME_READY) {
-                conn->consumeReadBuffer(consumed);
-                if (ws_handler_) {
-                    ws_handler_(fd, frame);
-                }
-            } else if (status == websocket::WsParseStatus::NEED_MORE_DATA) {
-                break;
-            } else {
-                // Protocol error
-                removeConnection(fd);
-                break;
-            }
-        }
-    }
-}
-
-void EpollServer::handleWrite(int fd) {
-    std::shared_ptr<Connection> conn;
-    {
-        std::lock_guard<std::mutex> lock(connections_mutex_);
-        auto it = connections_.find(fd);
-        if (it == connections_.end()) return;
-        conn = it->second;
-    }
-
-    if (!conn->hasPendingWrite()) {
-        return;
-    }
-
-    std::string data = conn->getPendingWriteData();
-    size_t total_sent = 0;
-
-#if !defined(_WIN32)
-    while (total_sent < data.size()) {
-        ssize_t sent = send(fd, data.data() + total_sent, data.size() - total_sent, 0);
-        if (sent > 0) {
-            total_sent += sent;
-        } else if (sent < 0) {
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                break; // Socket send buffer full, wait for next EPOLLOUT
-            }
-            removeConnection(fd);
-            return;
-        } else {
-            break;
-        }
-    }
-#endif
-
-    conn->consumeWriteBuffer(total_sent);
-
-#if !defined(_WIN32)
-    // If all written, remove EPOLLOUT to avoid busy spin
-    if (!conn->hasPendingWrite()) {
-        epoll_event ev{};
-        ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP;
-        ev.data.fd = fd;
-        epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, fd, &ev);
-    }
-#endif
-}
-
-void EpollServer::sendData(int client_fd, const std::string& data) {
-    std::shared_ptr<Connection> conn;
-    {
-        std::lock_guard<std::mutex> lock(connections_mutex_);
-        auto it = connections_.find(client_fd);
-        if (it == connections_.end()) return;
-        conn = it->second;
-    }
-
-    conn->appendWriteData(data);
-
-#if !defined(_WIN32)
-    if (epoll_fd_ != -1) {
-        epoll_event ev{};
-        ev.events = EPOLLIN | EPOLLOUT | EPOLLET | EPOLLRDHUP;
-        ev.data.fd = client_fd;
-        epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, client_fd, &ev);
-    }
-#endif
-    triggerWakeup();
-}
-
-void EpollServer::removeConnection(int fd) {
-    {
-        std::lock_guard<std::mutex> lock(connections_mutex_);
-        connections_.erase(fd);
-    }
-
-#if !defined(_WIN32)
-    if (epoll_fd_ != -1) {
-        epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, nullptr);
-    }
-#endif
-
-    if (disconnect_handler_) {
-        disconnect_handler_(fd);
-    }
-    utils::Logger::getInstance().debug("EpollServer", "Closed connection on fd:", fd);
-}
-
-void EpollServer::closeClient(int client_fd) {
-    removeConnection(client_fd);
+    auto it = connections_.find(fd);
+    return it == connections_.end() ? nullptr : it->second;
 }
 
 size_t EpollServer::getActiveConnectionsCount() const {
@@ -360,41 +95,169 @@ size_t EpollServer::getActiveConnectionsCount() const {
     return connections_.size();
 }
 
-void EpollServer::runEventLoop() {
-#if !defined(_WIN32)
-    epoll_event events[MAX_EPOLL_EVENTS];
+void EpollServer::handleAccept() {
+    while (true) {
+        sockaddr_in ca{};
+        int len = sizeof(ca);
+        SOCKET cs = accept(asSock(listen_fd_), reinterpret_cast<sockaddr*>(&ca), &len);
+        if (cs == INVALID_SOCKET) break;   // WSAEWOULDBLOCK: nothing more waiting
 
-    while (running_) {
-        int n_events = epoll_wait(epoll_fd_, events, MAX_EPOLL_EVENTS, 500);
+        u_long nonblock = 1;
+        ioctlsocket(cs, FIONBIO, &nonblock);
+        BOOL nodelay = TRUE;
+        setsockopt(cs, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<const char*>(&nodelay), sizeof(nodelay));
 
-        if (n_events == -1) {
-            if (errno == EINTR) continue;
+        const int fd = static_cast<int>(cs);
+        {
+            std::lock_guard<std::mutex> lock(connections_mutex_);
+            connections_[fd] = std::make_shared<Connection>(fd);
+        }
+        utils::Logger::getInstance().debug("Server", "Accepted connection, fd", fd);
+    }
+}
+
+void EpollServer::handleRead(int fd) {
+    auto conn = find(fd);
+    if (!conn) return;
+
+    char buf[8192];
+    bool closed = false;
+    while (true) {
+        const int n = recv(asSock(fd), buf, static_cast<int>(sizeof(buf)), 0);
+        if (n > 0) { conn->appendReadData(buf, static_cast<size_t>(n)); continue; }
+        if (n == 0) { closed = true; break; }          // peer closed
+        if (wouldBlock()) break;                       // everything available has been read
+        closed = true; break;                          // reset / error
+    }
+    if (closed) { removeConnection(fd); return; }
+
+    // --- HTTP: handle every complete request in the buffer (keep-alive + pipelining)
+    while (conn->getType() == ConnectionType::HTTP) {
+        const std::string data = conn->peekReadBuffer();
+        if (data.empty()) break;
+
+        http::HttpRequest request;
+        size_t consumed = 0;
+        const auto res = http::HttpParser::parse(data, request, consumed);
+        if (res == http::HttpParseResult::INCOMPLETE) break;
+        if (res == http::HttpParseResult::INVALID) {
+            conn->appendWriteData(http::HttpResponse::badRequest("Malformed or oversized HTTP request").toString());
+            conn->setCloseAfterWrite();
+            conn->consumeReadBuffer(data.size());
             break;
         }
+        conn->consumeReadBuffer(consumed);
 
-        for (int i = 0; i < n_events; ++i) {
-            int fd = events[i].data.fd;
-            uint32_t ev = events[i].events;
-
-            if (fd == listen_fd_) {
-                handleAccept();
-            } else if (fd == wakeup_fd_) {
-                uint64_t val = 0;
-                ssize_t r = read(wakeup_fd_, &val, sizeof(val));
-                (void)r;
-            } else if (ev & (EPOLLERR | EPOLLHUP | EPOLLRDHUP)) {
-                removeConnection(fd);
-            } else {
-                if (ev & EPOLLIN) {
-                    handleRead(fd);
-                }
-                if (ev & EPOLLOUT) {
-                    handleWrite(fd);
-                }
+        const bool upgrade = request.isWebSocketUpgrade();
+        if (http_handler_) {
+            try {
+                http_handler_(fd, request);
+            } catch (const std::exception& e) {
+                utils::Logger::getInstance().error("Server", "Unhandled error in", request.path, ":", e.what());
+                conn->appendWriteData(http::HttpResponse::serverError("Internal server error").toString());
             }
         }
+        // A handshake that was not rejected (the handler did not close the client) turns this
+        // connection into a WebSocket connection.
+        if (upgrade && find(fd) && !conn->closeAfterWrite()) conn->setType(ConnectionType::WEBSOCKET);
     }
-#endif
+
+    // --- WebSocket frames
+    if (conn->getType() == ConnectionType::WEBSOCKET) {
+        const std::string data = conn->peekReadBuffer();
+        size_t pos = 0;
+        while (pos < data.size()) {
+            websocket::WsFrame frame;
+            size_t used = 0;
+            const auto st = websocket::WebSocketParser::parseFrame(
+                reinterpret_cast<const uint8_t*>(data.data()) + pos, data.size() - pos, frame, used);
+            if (st == websocket::WsParseStatus::NEED_MORE_DATA) break;
+            if (st == websocket::WsParseStatus::INVALID) { removeConnection(fd); return; }
+            pos += used;
+            if (ws_handler_) {
+                try { ws_handler_(fd, frame); }
+                catch (const std::exception& e) { utils::Logger::getInstance().error("Server", "WebSocket handler error:", e.what()); }
+            }
+            if (!find(fd)) return;   // handler closed it
+        }
+        if (pos > 0) conn->consumeReadBuffer(pos);
+    }
+
+    handleWrite(fd);   // flush replies right away
+}
+
+void EpollServer::handleWrite(int fd) {
+    auto conn = find(fd);
+    if (!conn) return;
+
+    if (conn->hasPendingWrite()) {
+        const std::string data = conn->getPendingWriteData();
+        size_t total = 0;
+        while (total < data.size()) {
+            const int n = send(asSock(fd), data.data() + total, static_cast<int>(data.size() - total), 0);
+            if (n > 0) { total += static_cast<size_t>(n); continue; }
+            if (n == SOCKET_ERROR && wouldBlock()) break;   // socket buffer full; retry on next writable event
+            removeConnection(fd);
+            return;
+        }
+        conn->consumeWriteBuffer(total);
+    }
+    if (conn->closeAfterWrite() && !conn->hasPendingWrite()) removeConnection(fd);
+}
+
+void EpollServer::sendData(int fd, const std::string& data) {
+    auto conn = find(fd);
+    if (conn) conn->appendWriteData(data);   // the event loop notices within one tick
+}
+
+void EpollServer::closeClient(int fd) {
+    auto conn = find(fd);
+    if (!conn) return;
+    conn->setCloseAfterWrite();
+    if (!conn->hasPendingWrite()) removeConnection(fd);
+}
+
+void EpollServer::removeConnection(int fd) {
+    bool existed;
+    {
+        std::lock_guard<std::mutex> lock(connections_mutex_);
+        existed = connections_.erase(fd) > 0;   // the socket closes when the last reference goes away
+    }
+    if (existed) {
+        if (disconnect_handler_) disconnect_handler_(fd);
+        utils::Logger::getInstance().debug("Server", "Closed connection, fd", fd);
+    }
+}
+
+void EpollServer::runEventLoop() {
+    std::vector<WSAPOLLFD> fds;
+    while (!stop_requested_) {
+        fds.clear();
+        fds.push_back({asSock(listen_fd_), POLLRDNORM, 0});
+        {
+            std::lock_guard<std::mutex> lock(connections_mutex_);
+            for (const auto& [fd, conn] : connections_) {
+                SHORT ev = POLLRDNORM;
+                if (conn->hasPendingWrite()) ev |= POLLWRNORM;
+                fds.push_back({asSock(fd), ev, 0});
+            }
+        }
+
+        const int n = WSAPoll(fds.data(), static_cast<ULONG>(fds.size()), 20);   // 20 ms tick
+        if (n == SOCKET_ERROR) { Sleep(5); continue; }
+        if (n == 0) continue;
+
+        if (fds[0].revents & POLLRDNORM) handleAccept();
+
+        for (size_t i = 1; i < fds.size(); ++i) {
+            const int fd = static_cast<int>(fds[i].fd);
+            const SHORT re = fds[i].revents;
+            if (re == 0) continue;
+            if (re & POLLRDNORM) handleRead(fd);           // also detects a graceful close
+            else if (re & (POLLERR | POLLHUP | POLLNVAL)) { removeConnection(fd); continue; }
+            if (re & POLLWRNORM) handleWrite(fd);
+        }
+    }
 }
 
 } // namespace server

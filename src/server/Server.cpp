@@ -1,393 +1,156 @@
 #include "server/Server.h"
-#include "websocket/WebSocket.h"
+
+#include <chrono>
+
+#include <stdexcept>
+
+#include "routes/AcademicRoutes.h"
+#include "routes/AuthRoutes.h"
+#include "routes/ChatRoutes.h"
+#include "routes/NotificationRoutes.h"
+#include "routes/OsRoutes.h"
 #include "utils/Logger.h"
-#include <iostream>
 
 namespace uniconnect {
 namespace server {
 
-Server::Server(int port, size_t thread_pool_size, concurrency::SchedulingPolicy policy)
-    : port_(port),
-      db_(database::Database::getInstance()) {
+using http::HttpMethod;
+using http::HttpRequest;
+using http::HttpResponse;
 
-    // 1. Initialize OS Concurrency Engine
-    scheduler_ = std::make_shared<concurrency::Scheduler>(policy, 25);
-    task_queue_ = std::make_shared<concurrency::TaskQueue>(1000);
-    thread_pool_ = std::make_shared<concurrency::ThreadPool>(thread_pool_size, scheduler_, task_queue_);
-    deadlock_detector_ = std::make_shared<concurrency::DeadlockDetector>();
-    shm_ipc_ = std::make_unique<concurrency::SharedMemoryIPC>("/uniconnect_os_telemetry");
-    shm_ipc_->initialize(true);
+namespace {
+database::UserRepository& requireUsers(const ServerDeps& d) {
+    if (!d.users) throw std::invalid_argument("Server needs a user repository");
+    return *d.users;
+}
+} // namespace
 
-    // 2. Initialize Repositories
-    user_repo_ = std::make_unique<database::UserRepository>(db_);
-    course_repo_ = std::make_unique<database::CourseRepository>(db_);
-    enroll_repo_ = std::make_unique<database::EnrollmentRepository>(db_);
-    msg_repo_ = std::make_unique<database::MessageRepository>(db_);
+Server::Server(ServerConfig config, ServerDeps deps, services::AuthConfig auth_config)
+    : config_(config), deps_(deps), auth_(requireUsers(deps), std::move(auth_config)), socket_server_(config.port) {
+    if (deps_.academics) academics_ = std::make_unique<services::AcademicService>(*deps_.academics);
+    if (deps_.chat) chat_ = std::make_unique<services::ChatService>(*deps_.chat);
 
-    // 3. Initialize Services
-    auth_service_ = std::make_unique<services::AuthService>(*user_repo_);
-    user_service_ = std::make_unique<services::UserService>(*user_repo_);
-    course_service_ = std::make_unique<services::CourseService>(*course_repo_, *enroll_repo_);
-    chat_service_ = std::make_unique<services::ChatService>(*msg_repo_, *enroll_repo_, thread_pool_);
-    notification_service_ = std::make_unique<services::NotificationService>(*msg_repo_, *enroll_repo_, thread_pool_);
+    if (deps_.notifications && deps_.chat) notifications_ = std::make_unique<services::NotificationService>(*deps_.notifications, *deps_.chat);
 
-    // 4. Initialize Network Layer
-    epoll_server_ = std::make_unique<EpollServer>(port_);
-    setupRoutes();
+    concurrency::DispatcherConfig dc;
+    dc.worker_threads = config.worker_threads;
+    dc.queue_capacity = config.queue_capacity;
+    dc.policy = config.policy;
+    dc.time_quantum_ms = config.time_quantum_ms;
+    dispatcher_ = std::make_unique<concurrency::Dispatcher>(dc);
+
+    ws_manager_ = std::make_unique<websocket::WebSocketManager>([this](int fd, const std::string& bytes) { socket_server_.sendData(fd, bytes); });
+    ws_handler_ = std::make_unique<routes::WebSocketHandler>(auth_, *deps_.users, chat_.get(), *ws_manager_, [this](int fd) { socket_server_.closeClient(fd); });
+    socket_server_.setWsFrameHandler([this](int fd, const websocket::WsFrame& f) { ws_handler_->onFrame(fd, f); });
+    socket_server_.setDisconnectHandler([this](int fd) { ws_handler_->onDisconnect(fd); });
+
+    if (notifications_) {
+        notifications_->setDispatcher(dispatcher_.get());
+        // Every recipient who is online gets the notification immediately.
+        notifications_->setListener([this](const std::vector<models::Notification>& made) {
+            for (const auto& n : made) {
+                auto event = utils::JsonValue::object();
+                event["event"] = "notification";
+                event["data"] = n.toJson();
+                ws_manager_->broadcastToUsers({n.user_id}, event.serialize(false));
+            }
+        });
+    }
+    os_ = std::make_unique<services::OsService>(*dispatcher_, deadlock_, shared_memory_,
+                                                [this]() { return socket_server_.getActiveConnectionsCount(); },
+                                                [this]() { return ws_manager_->sessionCount(); });
+    if (chat_) {
+        chat_->setDispatcher(dispatcher_.get());
+        chat_->setOnlineChecker([this](int id) { return ws_manager_->isOnline(id); });
+        // A new direct chat or group appears in the other person's list at once.
+        chat_->setGroupAddedListener([this](int userId, const models::ChatGroup& g) {
+            auto event = utils::JsonValue::object();
+            event["event"] = "group_added";
+            event["data"] = g.toJson();
+            ws_manager_->broadcastToUsers({userId}, event.serialize(false));
+        });
+        // A stored message is pushed to every group member who has the group open.
+        chat_->setMessageListener([this](const models::ChatMessage& m, const std::vector<int>& recipients) {
+            auto event = utils::JsonValue::object();
+            event["event"] = "new_message";
+            event["data"] = m.toJson();
+            ws_manager_->broadcastToGroup(m.group_id, event.serialize(false), recipients);
+        });
+    }
+    registerRoutes();
+    socket_server_.setHttpHandler([this](int fd, const HttpRequest& req) { onHttpRequest(fd, req); });
 }
 
-Server::~Server() {
-    stop();
+void Server::registerRoutes() {
+    router_.get("/health", [](const HttpRequest&, const http::RouteParams&) {
+        auto o = utils::JsonValue::object();
+        o["status"] = "ok";
+        o["service"] = "UniConnect Backend";
+        return HttpResponse::okJson(o);
+    });
+    routes::registerAuthRoutes(router_, auth_);
+    if (academics_) routes::registerAcademicRoutes(router_, *academics_, auth_, *deps_.users);
+    if (chat_) routes::registerChatRoutes(router_, *chat_, auth_, *deps_.users);
+    if (notifications_) routes::registerNotificationRoutes(router_, *notifications_, auth_, *deps_.users);
+    routes::registerOsRoutes(router_, *os_, auth_, *deps_.users);
 }
 
-void Server::setupRoutes() {
-    // Connect WebSocketManager send callback to EpollServer sendData
-    websocket::WebSocketManager::getInstance().setSendCallback(
-        [this](int fd, const std::string& data) {
-            epoll_server_->sendData(fd, data);
+void Server::onHttpRequest(int fd, const HttpRequest& req) {
+    const auto started = std::chrono::steady_clock::now();
+    HttpResponse res;
+
+    if (req.isWebSocketUpgrade()) {   // GET /ws with Upgrade: websocket
+        bool accepted = false;
+        if (req.path == "/ws") res = ws_handler_->handshake(fd, req, accepted);
+        else res = HttpResponse::notFound("Endpoint not found: " + req.path);
+        socket_server_.sendData(fd, res.toString());
+        if (!accepted) socket_server_.closeClient(fd);   // otherwise the socket server switches this connection to WebSocket mode
+        utils::Logger::getInstance().info("HTTP", "WebSocket upgrade", req.path, res.status_code);
+        return;
+    }
+
+    if (req.method == HttpMethod::OPTIONS) {
+        res = HttpResponse::corsOptions();           // CORS preflight
+    } else {
+        const auto m = router_.match(req.method, req.path);
+        switch (m.kind) {
+            case http::Router::Match::Kind::FOUND:
+                try {
+                    res = m.handler(req, m.params);
+                } catch (const std::exception& e) {
+                    utils::Logger::getInstance().error("HTTP", "Handler failed for", req.path, ":", e.what());
+                    res = HttpResponse::serverError("Internal server error");
+                }
+                break;
+            case http::Router::Match::Kind::METHOD_NOT_ALLOWED:
+                res = HttpResponse::errorJson(405, "Method Not Allowed", "Method not allowed for " + req.path);
+                res.setHeader("Allow", m.allow);
+                break;
+            default:
+                res = HttpResponse::notFound("Endpoint not found: " + req.path);
         }
-    );
+    }
 
-    // Wire EpollServer callbacks
-    epoll_server_->setHttpHandler([this](int fd, const http::HttpRequest& req) {
-        handleHttpRequest(fd, req);
-    });
+    socket_server_.sendData(fd, res.toString());
 
-    epoll_server_->setWsFrameHandler([this](int fd, const websocket::WsFrame& frame) {
-        handleWsFrame(fd, frame);
-    });
-
-    epoll_server_->setDisconnectHandler([this](int fd) {
-        handleDisconnect(fd);
-    });
+    const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - started).count();
+    auto& log = utils::Logger::getInstance();
+    if (req.path == "/health") log.debug("HTTP", req.method_text, req.path, res.status_code, ms, "ms");
+    else log.info("HTTP", req.method_text, req.path, res.status_code, ms, "ms");   // never the body: it may hold passwords
 }
+
+Server::~Server() { dispatcher_->stop(); }
 
 void Server::start() {
-    utils::Logger::getInstance().info("Server", "Starting UniConnect C++20 Backend on port", port_);
-    thread_pool_->start();
-    updateSharedMemoryTelemetry();
-    epoll_server_->start();
+    if (!shared_memory_.initialize(true)) utils::Logger::getInstance().warn("Server", "Shared-memory telemetry is unavailable");
+    dispatcher_->start();
+    os_->updateTelemetry();
+    socket_server_.start();
+    dispatcher_->stop();
+    shared_memory_.cleanup();
 }
-
-void Server::stop() {
-    utils::Logger::getInstance().info("Server", "Shutting down UniConnect server...");
-    if (epoll_server_) epoll_server_->stop();
-    if (thread_pool_) thread_pool_->stop();
-    if (shm_ipc_) shm_ipc_->cleanup();
-}
-
-void Server::updateSharedMemoryTelemetry() {
-    concurrency::SharedMetricsSegment seg{};
-    seg.magic = 0x554E4943;
-    seg.version = 1;
-    seg.active_connections = static_cast<uint32_t>(epoll_server_ ? epoll_server_->getActiveConnectionsCount() : 0);
-    seg.worker_threads_total = static_cast<uint32_t>(thread_pool_->threadCount());
-
-    auto worker_stats = thread_pool_->getWorkersStats();
-    uint32_t busy = 0;
-    for (const auto& w : worker_stats) {
-        if (w.state == concurrency::WorkerState::BUSY) busy++;
-    }
-    seg.worker_threads_busy = busy;
-    seg.queue_depth = static_cast<uint32_t>(task_queue_->size());
-    seg.queue_capacity = static_cast<uint32_t>(task_queue_->capacity());
-    seg.scheduler_policy = static_cast<uint32_t>(scheduler_->getPolicy());
-
-    auto sm = scheduler_->getMetrics();
-    seg.context_switches = sm.context_switches;
-    seg.total_messages_processed = sm.total_tasks_completed;
-    seg.avg_waiting_time_ms = sm.avg_waiting_time_ms;
-    seg.avg_turnaround_time_ms = sm.avg_turnaround_time_ms;
-
-    auto dl = deadlock_detector_->detectDeadlock();
-    seg.deadlock_detected = dl.has_deadlock ? 1 : 0;
-
-    shm_ipc_->update(seg);
-}
-
-void Server::handleHttpRequest(int client_fd, const http::HttpRequest& request) {
-    // 1. WebSocket Upgrade Handshake
-    if (request.isWebSocketUpgrade()) {
-        http::HttpResponse handshake_resp;
-        if (websocket::WebSocketManager::getInstance().handleHandshake(request, handshake_resp)) {
-            // Upgrade connection state
-            epoll_server_->sendData(client_fd, handshake_resp.toString());
-            websocket::WebSocketManager::getInstance().addSession(client_fd);
-            return;
-        } else {
-            epoll_server_->sendData(client_fd, handshake_resp.toString());
-            epoll_server_->closeClient(client_fd);
-            return;
-        }
-    }
-
-    // 2. CORS Preflight
-    if (request.method == http::HttpMethod::OPTIONS) {
-        epoll_server_->sendData(client_fd, http::HttpResponse::corsOptions().toString());
-        return;
-    }
-
-    http::HttpResponse response;
-    const std::string& path = request.path;
-
-    // --- Health Check ---
-    if (path == "/health" || path == "/") {
-        auto obj = utils::JsonValue::object();
-        obj["status"] = "ok";
-        obj["service"] = "UniConnect Backend";
-        obj["session"] = "Graphic Era University 2026-27 (Team Avengers)";
-        obj["active_policy"] = concurrency::schedulingPolicyToString(scheduler_->getPolicy());
-        response = http::HttpResponse::okJson(obj);
-    }
-    // --- OS Live Dashboard Stats (Recharts Integration) ---
-    else if (path == "/api/os/stats") {
-        updateSharedMemoryTelemetry();
-        auto root = utils::JsonValue::object();
-        root["thread_pool"] = thread_pool_->getMetricsJson();
-        root["scheduler"] = scheduler_->getMetrics().toJson();
-        root["queue"] = task_queue_->getMetrics().toJson();
-        root["deadlock"] = deadlock_detector_->detectDeadlock().toJson();
-        root["deadlock_graph"] = deadlock_detector_->getGraphJson();
-        root["shared_memory"] = shm_ipc_->readAsJson();
-        root["active_connections"] = epoll_server_->getActiveConnectionsCount();
-        root["ws_sessions"] = websocket::WebSocketManager::getInstance().activeSessionsCount();
-        response = http::HttpResponse::okJson(root);
-    }
-    // --- OS CPU Scheduling Policy Switch ---
-    else if (path == "/api/os/scheduler" && request.method == http::HttpMethod::POST) {
-        auto json = request.getJsonBody();
-        std::string policy_str = json["policy"].asString();
-        auto new_policy = concurrency::stringToSchedulingPolicy(policy_str);
-        scheduler_->setPolicy(new_policy);
-
-        if (json.contains("time_quantum_ms")) {
-            scheduler_->setTimeQuantum(json["time_quantum_ms"].asInt(25));
-        }
-
-        auto resp_obj = utils::JsonValue::object();
-        resp_obj["success"] = true;
-        resp_obj["new_policy"] = concurrency::schedulingPolicyToString(new_policy);
-        resp_obj["time_quantum_ms"] = scheduler_->getTimeQuantum();
-        response = http::HttpResponse::okJson(resp_obj);
-    }
-    // --- OS Deadlock Detection Test Injection ---
-    else if (path == "/api/os/deadlock-test" && request.method == http::HttpMethod::POST) {
-        auto json = request.getJsonBody();
-        std::string action = json["action"].asString("create_cycle");
-
-        if (action == "create_cycle") {
-            deadlock_detector_->clear();
-            // Create circular wait: T1 holds R1, wants R2. T2 holds R2, wants R1.
-            deadlock_detector_->grantResource("WorkerThread-1", "Resource-MutexA");
-            deadlock_detector_->requestResource("WorkerThread-1", "Resource-MutexB");
-            deadlock_detector_->grantResource("WorkerThread-2", "Resource-MutexB");
-            deadlock_detector_->requestResource("WorkerThread-2", "Resource-MutexA");
-        } else {
-            deadlock_detector_->clear();
-        }
-
-        auto report = deadlock_detector_->detectDeadlock();
-        response = http::HttpResponse::okJson(report.toJson());
-    }
-    // --- Auth: Login ---
-    else if (path == "/api/auth/login" && request.method == http::HttpMethod::POST) {
-        auto json = request.getJsonBody();
-        std::string email = json["email"].asString();
-        std::string password = json["password"].asString();
-        auto auth_res = auth_service_->login(email, password);
-        if (auth_res.success) {
-            response = http::HttpResponse::okJson(auth_res.toJson());
-        } else {
-            response = http::HttpResponse::unauthorized(auth_res.error_message);
-        }
-    }
-    // --- Auth: Register ---
-    else if (path == "/api/auth/register" && request.method == http::HttpMethod::POST) {
-        auto json = request.getJsonBody();
-        std::string name = json["name"].asString();
-        std::string email = json["email"].asString();
-        std::string password = json["password"].asString();
-        std::string role_str = json["role"].asString("STUDENT");
-        std::string dept_id = json["department_id"].asString("dept-cse-01");
-
-        auto auth_res = auth_service_->registerUser(name, email, password, models::stringToUserRole(role_str), dept_id);
-        if (auth_res.success) {
-            response = http::HttpResponse::created(auth_res.toJson());
-        } else {
-            response = http::HttpResponse::badRequest(auth_res.error_message);
-        }
-    }
-    // --- Academic Hierarchy Tree ---
-    else if (path == "/api/hierarchy" && request.method == http::HttpMethod::GET) {
-        response = http::HttpResponse::okJson(course_service_->getHierarchyTree());
-    }
-    // --- Courses List ---
-    else if (path == "/api/courses" && request.method == http::HttpMethod::GET) {
-        auto courses = course_service_->getAllCourses();
-        auto arr = utils::JsonValue::array();
-        for (const auto& c : courses) arr.push_back(c.toJson());
-        auto root = utils::JsonValue::object();
-        root["courses"] = arr;
-        response = http::HttpResponse::okJson(root);
-    }
-    // --- Student Enrollment (With Automatic Group Sync) ---
-    else if (path == "/api/enroll" && request.method == http::HttpMethod::POST) {
-        auto json = request.getJsonBody();
-        std::string student_id = json["student_id"].asString();
-        std::string section_id = json["section_id"].asString();
-
-        models::Enrollment enr;
-        if (course_service_->enrollStudent(student_id, section_id, enr)) {
-            auto res = utils::JsonValue::object();
-            res["success"] = true;
-            res["enrollment"] = enr.toJson();
-            res["message"] = "Student enrolled successfully. Communication groups synchronized.";
-            response = http::HttpResponse::created(res);
-        } else {
-            response = http::HttpResponse::badRequest("Failed to enroll: section may be full or invalid.");
-        }
-    }
-    // --- Student Drop Course ---
-    else if (path == "/api/drop" && request.method == http::HttpMethod::POST) {
-        auto json = request.getJsonBody();
-        std::string student_id = json["student_id"].asString();
-        std::string section_id = json["section_id"].asString();
-
-        if (course_service_->dropStudent(student_id, section_id)) {
-            auto res = utils::JsonValue::object();
-            res["success"] = true;
-            res["message"] = "Course dropped. Removed from communication groups.";
-            response = http::HttpResponse::okJson(res);
-        } else {
-            response = http::HttpResponse::badRequest("Failed to drop course or not enrolled.");
-        }
-    }
-    // --- User Communication Groups ---
-    else if (path == "/api/groups" && request.method == http::HttpMethod::GET) {
-        std::string uid = request.getQueryParam("user_id");
-        auto groups = chat_service_->getUserGroups(uid);
-        auto arr = utils::JsonValue::array();
-        for (const auto& g : groups) arr.push_back(g.toJson());
-        auto root = utils::JsonValue::object();
-        root["groups"] = arr;
-        response = http::HttpResponse::okJson(root);
-    }
-    // --- Group Messages (GET & POST) ---
-    else if (path.rfind("/api/groups/", 0) == 0 && path.find("/messages") != std::string::npos) {
-        // Path format: /api/groups/{group_id}/messages
-        size_t id_start = 12; // length of "/api/groups/"
-        size_t id_end = path.find("/messages");
-        std::string group_id = path.substr(id_start, id_end - id_start);
-
-        if (request.method == http::HttpMethod::GET) {
-            auto msgs = chat_service_->getMessages(group_id);
-            auto arr = utils::JsonValue::array();
-            for (const auto& m : msgs) arr.push_back(m.toJson());
-            auto root = utils::JsonValue::object();
-            root["group_id"] = group_id;
-            root["messages"] = arr;
-            response = http::HttpResponse::okJson(root);
-        } else if (request.method == http::HttpMethod::POST) {
-            auto json = request.getJsonBody();
-            std::string sender_id = json["sender_id"].asString();
-            std::string sender_name = json["sender_name"].asString();
-            std::string content = json["content"].asString();
-            int priority = json["priority"].asInt(1);
-
-            chat_service_->postMessage(group_id, sender_id, sender_name, content, models::MessageType::TEXT, priority);
-            auto res = utils::JsonValue::object();
-            res["success"] = true;
-            res["message"] = "Message queued in concurrency engine";
-            response = http::HttpResponse::okJson(res);
-        }
-    }
-    // --- User Notifications ---
-    else if (path == "/api/notifications" && request.method == http::HttpMethod::GET) {
-        std::string uid = request.getQueryParam("user_id");
-        auto notifs = notification_service_->getUserNotifications(uid);
-        auto arr = utils::JsonValue::array();
-        for (const auto& n : notifs) arr.push_back(n.toJson());
-        auto root = utils::JsonValue::object();
-        root["notifications"] = arr;
-        response = http::HttpResponse::okJson(root);
-    }
-    // --- Instructor Announcement Fan-out ---
-    else if (path == "/api/announcements" && request.method == http::HttpMethod::POST) {
-        auto json = request.getJsonBody();
-        std::string group_id = json["group_id"].asString();
-        std::string title = json["title"].asString();
-        std::string content = json["content"].asString();
-        int priority = json["priority"].asInt(5);
-
-        notification_service_->sendAnnouncement(group_id, title, content, priority);
-        auto res = utils::JsonValue::object();
-        res["success"] = true;
-        res["message"] = "Announcement scheduled and broadcasted";
-        response = http::HttpResponse::okJson(res);
-    }
-    else {
-        response = http::HttpResponse::notFound("Endpoint not found: " + path);
-    }
-
-    epoll_server_->sendData(client_fd, response.toString());
-}
-
-void Server::handleWsFrame(int client_fd, const websocket::WsFrame& frame) {
-    if (frame.opcode == websocket::WsOpCode::PING) {
-        std::string pong = websocket::WebSocketParser::createPongFrame(frame.payload);
-        epoll_server_->sendData(client_fd, pong);
-        return;
-    }
-
-    if (frame.opcode == websocket::WsOpCode::CLOSE) {
-        epoll_server_->closeClient(client_fd);
-        return;
-    }
-
-    if (frame.opcode == websocket::WsOpCode::TEXT) {
-        utils::JsonValue json;
-        if (!utils::JsonValue::tryParse(frame.payload, json)) {
-            return;
-        }
-
-        std::string action = json["action"].asString();
-
-        if (action == "subscribe") {
-            std::string group_id = json["group_id"].asString();
-            websocket::WebSocketManager::getInstance().subscribe(client_fd, group_id);
-
-            auto ack = utils::JsonValue::object();
-            ack["event"] = "subscribed";
-            ack["group_id"] = group_id;
-            websocket::WebSocketManager::getInstance().sendText(client_fd, ack.serialize(false));
-        } else if (action == "send_message") {
-            std::string group_id = json["group_id"].asString();
-            std::string sender_id = json["sender_id"].asString();
-            std::string sender_name = json["sender_name"].asString();
-            std::string content = json["content"].asString();
-            int priority = json["priority"].asInt(1);
-
-            chat_service_->postMessage(group_id, sender_id, sender_name, content, models::MessageType::TEXT, priority);
-        } else if (action == "authenticate") {
-            std::string token = json["token"].asString();
-            std::string uid;
-            models::UserRole role;
-            if (auth_service_->validateToken(token, uid, role)) {
-                auto session = websocket::WebSocketManager::getInstance().getSession(client_fd);
-                if (session) session->setUserId(uid);
-
-                auto auth_ack = utils::JsonValue::object();
-                auth_ack["event"] = "authenticated";
-                auth_ack["user_id"] = uid;
-                websocket::WebSocketManager::getInstance().sendText(client_fd, auth_ack.serialize(false));
-            }
-        }
-    }
-}
-
-void Server::handleDisconnect(int client_fd) {
-    websocket::WebSocketManager::getInstance().removeSession(client_fd);
-}
+void Server::stop() { socket_server_.stop(); }
+bool Server::isRunning() const { return socket_server_.isRunning(); }
 
 } // namespace server
 } // namespace uniconnect

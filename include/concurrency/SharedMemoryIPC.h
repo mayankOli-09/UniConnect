@@ -1,7 +1,9 @@
 #pragma once
-
-#include <string>
+// Telemetry shared with other processes through a named Windows file mapping, guarded by a named mutex.
+// Any program on the machine can open the same name and read the latest numbers.
 #include <cstdint>
+#include <string>
+
 #include "utils/Json.h"
 
 namespace uniconnect {
@@ -28,22 +30,22 @@ struct SharedMetricsSegment {
 
 class SharedMemoryIPC {
 public:
-    explicit SharedMemoryIPC(const std::string& shm_name = "/uniconnect_os_telemetry");
+    explicit SharedMemoryIPC(const std::string& name = "Local\\uniconnect_os_telemetry");
     ~SharedMemoryIPC();
+    SharedMemoryIPC(const SharedMemoryIPC&) = delete;
+    SharedMemoryIPC& operator=(const SharedMemoryIPC&) = delete;
 
-    bool initialize(bool create_new = true);
+    bool initialize(bool create_new = true);   // false: attach to an existing mapping
     void update(const SharedMetricsSegment& metrics);
     bool read(SharedMetricsSegment& out_metrics);
     void cleanup();
-
     utils::JsonValue readAsJson();
 
 private:
-    std::string shm_name_;
-    int shm_fd_{-1};
-    void* mapped_addr_{nullptr};
-    size_t size_{sizeof(SharedMetricsSegment)};
-    bool is_creator_{false};
+    std::string name_;
+    void* mapping_ = nullptr;
+    void* view_ = nullptr;
+    void* lock_ = nullptr;
 };
 
 } // namespace concurrency

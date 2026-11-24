@@ -1,42 +1,33 @@
 #pragma once
-
-#include <string>
-#include <vector>
+// Hashing and encoding primitives (SHA-256, HMAC, PBKDF2, hex, base64url, secure random).
+// Byte strings are carried in std::string.
+#include <array>
+#include <cstddef>
 #include <cstdint>
+#include <string>
 
 namespace uniconnect {
 namespace utils {
+namespace crypto {
 
-class Crypto {
-public:
-    // Base64 encode and decode
-    static std::string base64Encode(const unsigned char* data, size_t len);
-    static std::string base64Encode(const std::string& input);
-    static std::string base64Decode(const std::string& input);
+std::string sha1(const std::string& data);                                    // 20 raw bytes (WebSocket handshake only)
+std::string sha256(const std::string& data);                                  // 32 raw bytes
+std::string hmacSha256(const std::string& key, const std::string& data);      // 32 raw bytes
+std::string pbkdf2Sha256(const std::string& password, const std::string& salt,
+                         unsigned iterations, size_t dkLen = 32);             // raw bytes
 
-    // SHA-1 (required for RFC 6455 WebSocket Handshake)
-    static std::vector<uint8_t> sha1(const std::string& input);
-    static std::string sha1Hex(const std::string& input);
+std::string toHex(const std::string& bytes);
+bool fromHex(const std::string& hex, std::string& out);
 
-    // SHA-256 (for hashing passwords and tokens)
-    static std::vector<uint8_t> sha256(const std::string& input);
-    static std::string sha256Hex(const std::string& input);
+std::string base64Encode(const std::string& bytes);                           // standard alphabet, with padding
+std::string base64UrlEncode(const std::string& bytes);                        // no padding
+bool base64UrlDecode(const std::string& text, std::string& out);
 
-    // HMAC-SHA256 (for JWT signature)
-    static std::vector<uint8_t> hmacSha256(const std::string& key, const std::string& data);
-    static std::string hmacSha256Hex(const std::string& key, const std::string& data);
+bool constantTimeEquals(const std::string& a, const std::string& b);
 
-    // Password hashing with salt
-    static std::string hashPassword(const std::string& password, const std::string& salt = "uniconnect_salt_2026");
-    static bool verifyPassword(const std::string& password, const std::string& hash, const std::string& salt = "uniconnect_salt_2026");
+// Cryptographically secure random bytes from the Windows CNG (throws std::runtime_error on failure).
+std::string randomBytes(size_t n);
 
-    // WebSocket Handshake response key generator
-    static std::string generateWebSocketAcceptKey(const std::string& clientKey);
-
-    // Simple JWT-like token generator / verifier
-    static std::string createJWT(const std::string& payloadJson, const std::string& secret);
-    static bool verifyJWT(const std::string& token, const std::string& secret, std::string& outPayload);
-};
-
+} // namespace crypto
 } // namespace utils
 } // namespace uniconnect
